@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jair Ramírez — Colombia 5.0</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #050510;
+      --surface: #0d0d24;
+      --card: #111130;
+      --accent1: #6c2bff;
+      --accent2: #00e5ff;
+      --accent3: #ff3c6f;
+      --accent4: #39ff14;
+      --text: #e8e8f0;
+      --muted: #7070a0;
+      --border: rgba(108,43,255,0.25);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; overflow-x: hidden; }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 3rem;
+      background: rgba(5,5,16,0.85);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.3rem; color: var(--text); text-decoration: none; }
+    .nav-logo span { color: var(--accent2); }
+    .nav-back { font-family: 'Space Mono', monospace; font-size: 0.72rem; color: var(--muted); text-decoration: none; letter-spacing: 0.08em; transition: color 0.2s; }
+    .nav-back:hover { color: var(--accent2); }
+    .lang-toggle { display: flex; gap: 0.4rem; }
+    .lang-btn { font-family: 'Space Mono', monospace; font-size: 0.7rem; padding: 0.3rem 0.7rem; border: 1px solid var(--border); background: transparent; color: var(--muted); border-radius: 4px; cursor: pointer; transition: all 0.2s; }
+    .lang-btn.active, .lang-btn:hover { border-color: var(--accent2); color: var(--accent2); background: rgba(0,229,255,0.07); }
+
+    .hero-sub {
+      min-height: 70vh;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 8rem 3rem 4rem;
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse 80% 60% at 40% 30%, rgba(108,43,255,0.18) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 50% at 80% 70%, rgba(255,60,111,0.12) 0%, transparent 60%);
+    }
+    .hero-sub-img {
+      position: absolute; inset: 0;
+      overflow: hidden;
+    }
+    .hero-sub-img img {
+      width: 100%; height: 100%; object-fit: cover;
+      opacity: 0.15; filter: blur(2px);
+    }
+    .hero-sub-grid {
+      position: absolute; inset: 0;
+      background-image: linear-gradient(rgba(108,43,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(108,43,255,0.06) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    .breadcrumb {
+      font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--muted);
+      letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1.5rem;
+    }
+    .breadcrumb a { color: var(--accent2); text-decoration: none; }
+    .hero-tag {
+      display: inline-block;
+      background: rgba(255,60,111,0.15);
+      color: var(--accent3);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.68rem; padding: 0.3rem 0.8rem; border-radius: 4px;
+      margin-bottom: 1.2rem; letter-spacing: 0.1em;
+    }
+    .hero-sub h1 {
+      font-family: 'Syne', sans-serif; font-weight: 800;
+      font-size: clamp(2.5rem, 7vw, 6rem);
+      line-height: 0.95; letter-spacing: -0.04em;
+      margin-bottom: 1.5rem;
+    }
+    .hero-sub h1 em { font-style: normal; color: var(--accent1); }
+    .hero-sub .subtitle {
+      font-size: 1.1rem; color: var(--muted); max-width: 600px; line-height: 1.75;
+      margin-bottom: 2rem;
+    }
+    .speaker-info {
+      display: flex; align-items: center; gap: 1.5rem;
+      padding: 1.2rem 1.5rem;
+      background: rgba(13,13,36,0.8);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      width: fit-content;
+    }
+    .speaker-avatar {
+      width: 50px; height: 50px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.1rem; color: white;
+      flex-shrink: 0;
+    }
+    .speaker-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; }
+    .speaker-role { font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--accent2); margin-top: 0.2rem; letter-spacing: 0.05em; }
+
+    .content { max-width: 1100px; margin: 0 auto; padding: 5rem 3rem; }
+    .content-grid { display: grid; grid-template-columns: 1fr 340px; gap: 4rem; align-items: start; }
+
+    .section-tag { font-family: 'Space Mono', monospace; font-size: 0.68rem; letter-spacing: 0.2em; color: var(--accent2); text-transform: uppercase; margin-bottom: 1rem; }
+    .section-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(1.8rem, 4vw, 3rem); line-height: 1.05; letter-spacing: -0.03em; margin-bottom: 1.5rem; }
+    .body-text { font-size: 1rem; line-height: 1.9; color: var(--muted); margin-bottom: 1.5rem; }
+    .body-text strong { color: var(--text); }
+
+    .pullquote {
+      border-left: 3px solid var(--accent3);
+      padding: 1.5rem 1.5rem 1.5rem 2rem;
+      margin: 2.5rem 0;
+      background: rgba(255,60,111,0.05);
+      border-radius: 0 8px 8px 0;
+    }
+    .pullquote p {
+      font-family: 'Syne', sans-serif; font-size: 1.3rem; font-weight: 600;
+      line-height: 1.5; color: var(--text); margin-bottom: 0.5rem;
+    }
+    .pullquote cite { font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--accent3); letter-spacing: 0.1em; }
+
+    .sidebar-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+      padding: 1.8rem; position: sticky; top: 6rem;
+    }
+    .sidebar-card h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.05rem; margin-bottom: 1.2rem; }
+    .sidebar-item { display: flex; gap: 0.8rem; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
+    .sidebar-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .sidebar-icon { font-size: 1.2rem; flex-shrink: 0; }
+    .sidebar-label { font-family: 'Space Mono', monospace; font-size: 0.62rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.2rem; }
+    .sidebar-value { font-size: 0.88rem; color: var(--text); }
+
+    .img-full { width: 100%; border-radius: 12px; margin: 2.5rem 0; border: 1px solid var(--border); display: block; }
+
+    .key-ideas { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 2.5rem 0; }
+    .idea-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 1.3rem; }
+    .idea-num { font-family: 'Space Mono', monospace; font-size: 0.62rem; color: var(--accent1); margin-bottom: 0.5rem; }
+    .idea-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.95rem; margin-bottom: 0.4rem; }
+    .idea-body { font-size: 0.82rem; line-height: 1.65; color: var(--muted); }
+
+    .nav-pages { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); }
+    .page-link { display: block; flex: 1; min-width: 200px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 1.3rem; text-decoration: none; color: inherit; transition: all 0.25s; }
+    .page-link:hover { border-color: var(--accent1); transform: translateY(-2px); }
+    .page-link-label { font-family: 'Space Mono', monospace; font-size: 0.62rem; color: var(--muted); text-transform: uppercase; margin-bottom: 0.4rem; }
+    .page-link-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; color: var(--accent2); }
+
+    footer { border-top: 1px solid var(--border); padding: 2rem 3rem; display: flex; justify-content: space-between; align-items: center; }
+    .footer-brand { font-family: 'Syne', sans-serif; font-weight: 800; color: var(--text); }
+    .footer-brand span { color: var(--accent2); }
+    .footer-copy { font-family: 'Space Mono', monospace; font-size: 0.62rem; color: var(--muted); }
+
+    [data-lang="en"] { display: none; }
+
+    @media (max-width: 900px) {
+      nav { padding: 1rem 1.5rem; }
+      .hero-sub { padding: 7rem 1.5rem 3rem; }
+      .content { padding: 3rem 1.5rem; }
+      .content-grid { grid-template-columns: 1fr; }
+      .key-ideas { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="../index.html" class="nav-logo">Col<span>5.0</span></a>
+    <a href="../index.html" class="nav-back" data-lang="es">← Volver al inicio</a>
+    <a href="../index.html" class="nav-back" data-lang="en" style="display:none">← Back to home</a>
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('es')">ES</button>
+      <button class="lang-btn" onclick="setLang('en')">EN</button>
+    </div>
+  </nav>
+
+  <div class="hero-sub">
+    <div class="hero-sub-img"><img src="../images/img3.jpg" alt="Jair Ramirez conferencia" /></div>
+    <div class="hero-sub-grid"></div>
+    <div class="breadcrumb">
+      <a href="../index.html">Colombia 5.0</a> / <span data-lang="es">Conferencias</span><span data-lang="en" style="display:none">Conferences</span>
+    </div>
+    <div class="hero-tag" data-lang="es">🦸 Inteligencia Artificial · Colombia 5.0</div>
+    <div class="hero-tag" data-lang="en" style="display:none">🦸 Artificial Intelligence · Colombia 5.0</div>
+    <h1>
+      <span data-lang="es">Spider-Man<br/>con <em>IA</em></span>
+      <span data-lang="en" style="display:none">Spider-Man<br/>with <em>AI</em></span>
+    </h1>
+    <p class="subtitle" data-lang="es">Héroes y villanos del mundo digital. Una conferencia que usó el universo de Marvel para hablar de lo más urgente: cómo usamos (y mal usamos) la inteligencia artificial.</p>
+    <p class="subtitle" data-lang="en" style="display:none">Heroes and villains of the digital world. A conference that used the Marvel universe to talk about the most urgent topic: how we use (and misuse) artificial intelligence.</p>
+    <div class="speaker-info">
+      <div class="speaker-avatar">JR</div>
+      <div>
+        <div class="speaker-name">Jair Ramírez</div>
+        <div class="speaker-role" data-lang="es">Presidente · Comisión de IA LATAM · 🇲🇽 México</div>
+        <div class="speaker-role" data-lang="en" style="display:none">President · LATAM AI Commission · 🇲🇽 Mexico</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="content-grid">
+      <div>
+        <p class="section-tag" data-lang="es">// La Conferencia</p>
+        <p class="section-tag" data-lang="en" style="display:none">// The Conference</p>
+        <h2 class="section-title" data-lang="es">La charla que nadie<br/>esperaba así</h2>
+        <h2 class="section-title" data-lang="en" style="display:none">The talk nobody<br/>expected this way</h2>
+
+        <p class="body-text" data-lang="es">
+          Cuando <strong>Jair Ramírez</strong>, Presidente de la Comisión de Inteligencia Artificial LATAM, subió al escenario del auditorio principal de Colombia 5.0, nadie sabía exactamente qué esperar. Lo que siguió fue una hora que combinó entretenimiento, profundidad intelectual, referencias pop y una honestidad refrescante sobre el estado actual de la inteligencia artificial en América Latina.
+        </p>
+        <p class="body-text" data-lang="en" style="display:none">
+          When <strong>Jair Ramírez</strong>, President of the LATAM Artificial Intelligence Commission, took the stage at the main auditorium of Colombia 5.0, nobody knew exactly what to expect. What followed was an hour that combined entertainment, intellectual depth, pop references and a refreshing honesty about the current state of artificial intelligence in Latin America.
+        </p>
+
+        <img src="../images/img5.jpg" alt="Perfil Jair Ramirez Colombia 5.0" class="img-full" />
+
+        <p class="body-text" data-lang="es">
+          La propuesta narrativa de Ramírez era audaz: tomar el universo de <strong>Spider-Man</strong> —amado por millones en toda Latinoamérica— y usarlo como lente para examinar el ecosistema de la IA. ¿Quiénes son los héroes? ¿Quiénes los villanos? ¿Y en qué categoría caemos nosotros, los usuarios, los ciudadanos, los profesionales que tocamos la IA a diario sin necesariamente entenderla de fondo?
+        </p>
+        <p class="body-text" data-lang="en" style="display:none">
+          Ramírez's narrative proposal was bold: take the <strong>Spider-Man</strong> universe — loved by millions across Latin America — and use it as a lens to examine the AI ecosystem. Who are the heroes? Who are the villains? And in which category do we fall, we users, we citizens, the professionals who touch AI daily without necessarily understanding it deeply?
+        </p>
+
+        <div class="pullquote">
+          <p data-lang="es">"Hoy más que nunca necesitan ser sus propios héroes. Nadie más va a venir a salvarlos del uso irresponsable de la tecnología."</p>
+          <p data-lang="en" style="display:none">"Today more than ever you need to be your own heroes. Nobody else is going to come and save you from the irresponsible use of technology."</p>
+          <cite data-lang="es">— Jair Ramírez, Colombia 5.0, 2026</cite>
+          <cite data-lang="en" style="display:none">— Jair Ramírez, Colombia 5.0, 2026</cite>
+        </div>
+
+        <p class="body-text" data-lang="es">
+          La primera parte de la conferencia fue casi como un diagnóstico: Ramírez presentó datos alarmantes sobre cómo la mayoría de usuarios de herramientas de IA en la región las utilizan de manera superficial, sin comprender sus limitaciones, sus sesgos ni las implicaciones éticas de sus outputs. "Tenemos acceso a la tecnología más poderosa en la historia de la humanidad," dijo, "y la estamos usando principalmente para hacer memes y pedir recetas de cocina." El público rió, pero la incomodidad era palpable.
+        </p>
+        <p class="body-text" data-lang="en" style="display:none">
+          The first part of the conference was almost like a diagnosis: Ramírez presented alarming data about how most AI tool users in the region use them superficially, without understanding their limitations, their biases, or the ethical implications of their outputs. "We have access to the most powerful technology in the history of humanity," he said, "and we are mainly using it to make memes and ask for cooking recipes." The audience laughed, but the discomfort was palpable.
+        </p>
+
+        <img src="../images/img4.jpg" alt="Uso incorrecto de la IA - Colombia 5.0" class="img-full" />
+
+        <p class="section-tag" style="margin-top:3rem" data-lang="es">// Los Héroes vs Los Villanos</p>
+        <p class="section-tag" style="margin-top:3rem" data-lang="en" style="display:none">// The Heroes vs The Villains</p>
+        <h3 style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.5rem;margin-bottom:1.5rem;" data-lang="es">El mapa del mundo digital según Ramírez</h3>
+        <h3 style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.5rem;margin-bottom:1.5rem;" data-lang="en" style="display:none">The map of the digital world according to Ramírez</h3>
+
+        <div class="key-ideas">
+          <div class="idea-card">
+            <div class="idea-num">HÉROE 01</div>
+            <div class="idea-title" data-lang="es">El Usuario Crítico</div>
+            <div class="idea-title" data-lang="en" style="display:none">The Critical User</div>
+            <p class="idea-body" data-lang="es">Quien no acepta el output de la IA a ciegas. Quien verifica, cuestiona, compara. Quien entiende que la IA es una herramienta, no un oráculo.</p>
+            <p class="idea-body" data-lang="en" style="display:none">One who doesn't accept AI output blindly. Who verifies, questions, compares. Who understands that AI is a tool, not an oracle.</p>
+          </div>
+          <div class="idea-card">
+            <div class="idea-num">HÉROE 02</div>
+            <div class="idea-title" data-lang="es">El Educador Digital</div>
+            <div class="idea-title" data-lang="en" style="display:none">The Digital Educator</div>
+            <p class="idea-body" data-lang="es">Quien forma a otros en el uso responsable. Quien convierte el conocimiento tecnológico en bien común. El maestro que enseña a pescar, no el que regala el pez generado por IA.</p>
+            <p class="idea-body" data-lang="en" style="display:none">One who trains others in responsible use. Who turns technological knowledge into a common good. The teacher who teaches to fish, not the one who gives the AI-generated fish.</p>
+          </div>
+          <div class="idea-card">
+            <div class="idea-num">VILLANO 01</div>
+            <div class="idea-title" data-lang="es">El Crédulo Digital</div>
+            <div class="idea-title" data-lang="en" style="display:none">The Digital Credulous</div>
+            <p class="idea-body" data-lang="es">Quien copia y pega sin pensar. Quien delega su juicio a un algoritmo. Quien comparte desinformación generada por IA creyendo que es verdad absoluta.</p>
+            <p class="idea-body" data-lang="en" style="display:none">One who copies and pastes without thinking. Who delegates their judgment to an algorithm. Who shares AI-generated misinformation believing it is absolute truth.</p>
+          </div>
+          <div class="idea-card">
+            <div class="idea-num">VILLANO 02</div>
+            <div class="idea-title" data-lang="es">El Monopolizador</div>
+            <div class="idea-title" data-lang="en" style="display:none">The Monopolizer</div>
+            <p class="idea-body" data-lang="es">Las estructuras que concentran el poder de la IA en pocas manos. Los que la usan para excluir, vigilar y controlar en lugar de democratizar y empoderar.</p>
+            <p class="idea-body" data-lang="en" style="display:none">The structures that concentrate AI power in few hands. Those who use it to exclude, surveil and control instead of democratizing and empowering.</p>
+          </div>
+        </div>
+
+        <p class="body-text" data-lang="es">
+          Lo que hizo especialmente poderosa la conferencia de Ramírez fue su capacidad de conectar lo macro con lo cotidiano. No habló solo de políticas de IA o de grandes corporaciones tecnológicas; habló del estudiante universitario que entrega trabajos generados por IA sin entender el contenido, del profesional de salud que consulta un chatbot antes de a un médico, del ciudadano que forma su opinión política en base a contenido sintético sin saberlo. El Spider-Man de Ramírez no era solo una metáfora: era un espejo.
+        </p>
+        <p class="body-text" data-lang="en" style="display:none">
+          What made Ramírez's conference especially powerful was his ability to connect the macro with the everyday. He didn't only talk about AI policies or big tech corporations; he talked about the university student who submits AI-generated work without understanding the content, the healthcare professional who consults a chatbot before a doctor, the citizen who forms their political opinion based on synthetic content without knowing it. Ramírez's Spider-Man was not just a metaphor: it was a mirror.
+        </p>
+
+        <div class="pullquote">
+          <p data-lang="es">"El uso incorrecto de la IA no siempre es malicioso. La mayoría de las veces es simplemente ignorante. Y la ignorancia, en este caso, tiene consecuencias que van mucho más allá del individuo."</p>
+          <p data-lang="en" style="display:none">"The incorrect use of AI is not always malicious. Most of the time it is simply ignorant. And ignorance, in this case, has consequences that go far beyond the individual."</p>
+          <cite>Jair Ramírez · Colombia 5.0, 2026</cite>
+        </div>
+
+        <p class="body-text" data-lang="es">
+          La conferencia cerró con una invitación: Colombia no necesita solo consumidores de tecnología, necesita <strong>ciudadanos digitales conscientes</strong>. Personas que entiendan cómo funciona la IA, que puedan distinguir entre un uso responsable y uno que perpetúa inequidades, y que se atrevan a exigir transparencia a las plataformas y a los gobiernos. En ese momento, el auditorio —que nunca estuvo completamente lleno pero que vibró con una energía concentrada— aplaudió con una intensidad que decía más que cualquier estadística de asistencia.
+        </p>
+        <p class="body-text" data-lang="en" style="display:none">
+          The conference closed with an invitation: Colombia doesn't just need technology consumers, it needs <strong>conscious digital citizens</strong>. People who understand how AI works, who can distinguish between responsible use and one that perpetuates inequalities, and who dare to demand transparency from platforms and governments. At that moment, the auditorium — which was never completely full but vibrated with a concentrated energy — applauded with an intensity that said more than any attendance statistic.
+        </p>
+
+        <div class="nav-pages">
+          <a href="ia.html" class="page-link">
+            <div class="page-link-label" data-lang="es">→ Siguiente</div>
+            <div class="page-link-label" data-lang="en" style="display:none">→ Next</div>
+            <div class="page-link-title" data-lang="es">Uso de la IA en Colombia</div>
+            <div class="page-link-title" data-lang="en" style="display:none">AI Use in Colombia</div>
+          </a>
+          <a href="colombia50-iniciativa.html" class="page-link">
+            <div class="page-link-label" data-lang="es">→ Ver también</div>
+            <div class="page-link-label" data-lang="en" style="display:none">→ See also</div>
+            <div class="page-link-title" data-lang="es">La Iniciativa Colombia 5.0</div>
+            <div class="page-link-title" data-lang="en" style="display:none">The Colombia 5.0 Initiative</div>
+          </a>
+          <a href="../index.html" class="page-link">
+            <div class="page-link-label" data-lang="es">← Volver</div>
+            <div class="page-link-label" data-lang="en" style="display:none">← Back</div>
+            <div class="page-link-title" data-lang="es">Inicio · La Experiencia</div>
+            <div class="page-link-title" data-lang="en" style="display:none">Home · The Experience</div>
+          </a>
+        </div>
+      </div>
+
+      <!-- SIDEBAR -->
+      <div>
+        <div class="sidebar-card">
+          <h3 data-lang="es">Datos del Ponente</h3>
+          <h3 data-lang="en" style="display:none">Speaker Info</h3>
+          <div class="sidebar-item">
+            <div class="sidebar-icon">👤</div>
+            <div>
+              <div class="sidebar-label" data-lang="es">Nombre</div>
+              <div class="sidebar-label" data-lang="en" style="display:none">Name</div>
+              <div class="sidebar-value">Jair Ramírez</div>
+            </div>
+          </div>
+          <div class="sidebar-item">
+            <div class="sidebar-icon">🏛️</div>
+            <div>
+              <div class="sidebar-label" data-lang="es">Cargo</div>
+              <div class="sidebar-label" data-lang="en" style="display:none">Role</div>
+              <div class="sidebar-value" data-lang="es">Presidente, Comisión de IA LATAM</div>
+              <div class="sidebar-value" data-lang="en" style="display:none">President, LATAM AI Commission</div>
+            </div>
+          </div>
+          <div class="sidebar-item">
+            <div class="sidebar-icon">🇲🇽</div>
+            <div>
+              <div class="sidebar-label" data-lang="es">Origen</div>
+              <div class="sidebar-label" data-lang="en" style="display:none">Origin</div>
+              <div class="sidebar-value">México</div>
+            </div>
+          </div>
+          <div class="sidebar-item">
+            <div class="sidebar-icon">📍</div>
+            <div>
+              <div class="sidebar-label" data-lang="es">Ubicación</div>
+              <div class="sidebar-label" data-lang="en" style="display:none">Location</div>
+              <div class="sidebar-value" data-lang="es">Auditorio Principal · Colombia 5.0</div>
+              <div class="sidebar-value" data-lang="en" style="display:none">Main Auditorium · Colombia 5.0</div>
+            </div>
+          </div>
+          <div class="sidebar-item">
+            <div class="sidebar-icon">🎯</div>
+            <div>
+              <div class="sidebar-label" data-lang="es">Tema</div>
+              <div class="sidebar-label" data-lang="en" style="display:none">Topic</div>
+              <div class="sidebar-value" data-lang="es">Spider-Man con IA: Héroes y Villanos del Mundo Digital</div>
+              <div class="sidebar-value" data-lang="en" style="display:none">Spider-Man with AI: Heroes and Villains of the Digital World</div>
+            </div>
+          </div>
+          <div class="sidebar-item">
+            <div class="sidebar-icon">💼</div>
+            <div>
+              <div class="sidebar-label">LinkedIn</div>
+              <div class="sidebar-value">Jair Ramírez</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-brand">Col<span>5.0</span></div>
+    <div class="footer-copy">© 2026 Colombia 5.0 · Ministerio TIC · Tr-ce</div>
+  </footer>
+
+  <script>
+    function setLang(lang) {
+      document.querySelectorAll('[data-lang]').forEach(el => {
+        el.style.display = el.dataset.lang === lang ? '' : 'none';
+      });
+      document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`).classList.add('active');
+      localStorage.setItem('col50lang', lang);
+    }
+    const saved = localStorage.getItem('col50lang') || 'es';
+    setLang(saved);
+  </script>
+</body>
+</html>

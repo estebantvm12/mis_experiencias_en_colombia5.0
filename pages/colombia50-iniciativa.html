@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>La Iniciativa — Colombia 5.0</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #050510;
+      --surface: #0d0d24;
+      --card: #111130;
+      --accent1: #6c2bff;
+      --accent2: #00e5ff;
+      --accent3: #ff3c6f;
+      --accent4: #39ff14;
+      --text: #e8e8f0;
+      --muted: #7070a0;
+      --border: rgba(108,43,255,0.25);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; overflow-x: hidden; }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 3rem;
+      background: rgba(5,5,16,0.85); backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.3rem; color: var(--text); text-decoration: none; }
+    .nav-logo span { color: var(--accent2); }
+    .nav-back { font-family: 'Space Mono', monospace; font-size: 0.72rem; color: var(--muted); text-decoration: none; letter-spacing: 0.08em; transition: color 0.2s; }
+    .nav-back:hover { color: var(--accent2); }
+    .lang-toggle { display: flex; gap: 0.4rem; }
+    .lang-btn { font-family: 'Space Mono', monospace; font-size: 0.7rem; padding: 0.3rem 0.7rem; border: 1px solid var(--border); background: transparent; color: var(--muted); border-radius: 4px; cursor: pointer; transition: all 0.2s; }
+    .lang-btn.active, .lang-btn:hover { border-color: var(--accent2); color: var(--accent2); background: rgba(0,229,255,0.07); }
+
+    .hero-sub {
+      min-height: 70vh;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 8rem 3rem 4rem;
+      position: relative; overflow: hidden;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 20%, rgba(108,43,255,0.2) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 50% at 20% 80%, rgba(0,229,255,0.12) 0%, transparent 60%);
+    }
+    .hero-sub-img { position: absolute; inset: 0; overflow: hidden; }
+    .hero-sub-img img { width: 100%; height: 100%; object-fit: cover; opacity: 0.1; }
+    .hero-sub-grid {
+      position: absolute; inset: 0;
+      background-image: linear-gradient(rgba(108,43,255,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(108,43,255,0.07) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+    .breadcrumb { font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--muted); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1.5rem; }
+    .breadcrumb a { color: var(--accent2); text-decoration: none; }
+    .hero-tag { display: inline-block; background: rgba(108,43,255,0.15); color: var(--accent1); font-family: 'Space Mono', monospace; font-size: 0.68rem; padding: 0.3rem 0.8rem; border-radius: 4px; margin-bottom: 1.2rem; letter-spacing: 0.1em; }
+    .hero-sub h1 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(2.5rem, 7vw, 6rem); line-height: 0.95; letter-spacing: -0.04em; margin-bottom: 1.5rem; }
+    .hero-sub h1 em { font-style: normal; color: var(--accent2); }
+    .hero-sub .subtitle { font-size: 1.1rem; color: var(--muted); max-width: 600px; line-height: 1.75; margin-bottom: 2rem; }
+
+    .content { max-width: 1100px; margin: 0 auto; padding: 5rem 3rem; }
+    .content-grid { display: grid; grid-template-columns: 1fr 340px; gap: 4rem; align-items: start; }
+
+    .section-tag { font-family: 'Space Mono', monospace; font-size: 0.68rem; letter-spacing: 0.2em; color: var(--accent1); text-transform: uppercase; margin-bottom: 1rem; }
+    .section-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(1.8rem, 4vw, 3rem); line-height: 1.05; letter-spacing: -0.03em; margin-bottom: 1.5rem; }
+    .body-text { font-size: 1rem; line-height: 1.9; color: var(--muted); margin-bottom: 1.5rem; }
+    .body-text strong { color: var(--text); }
+
+    .pullquote {
+      border-left: 3px solid var(--accent2);
+      padding: 1.5rem 1.5rem 1.5rem 2rem;
+      margin: 2.5rem 0;
+      background: rgba(0,229,255,0.05);
+      border-radius: 0 8px 8px 0;
+    }
+    .pullquote p { font-family: 'Syne', sans-serif; font-size: 1.3rem; font-weight: 600; line-height: 1.5; color: var(--text); margin-bottom: 0.5rem; }
+    .pullquote cite { font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--accent2); letter-spacing: 0.1em; }
+
+    .img-full { width: 100%; border-radius: 12px; margin: 2.5rem 0; border: 1px solid var(--border); display: block; }
+
+    .pillar-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin: 2rem 0; }
+    .pillar-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+      padding: 1.5rem; text-align: center;
+    }
+    .pillar-icon { font-size: 2rem; margin-bottom: 0.8rem; }
+    .pillar-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; margin-bottom: 0.4rem; color: var(--accent2); }
+    .pillar-desc { font-size: 0.82rem; line-height: 1.6; color: var(--muted); }
+
+    .timeline { margin: 2.5rem 0; position: relative; padding-left: 2rem; }
+    .timeline::before { content: ''; position: absolute; left: 0.45rem; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, var(--accent1), var(--accent2)); }
+    .tl-item { position: relative; margin-bottom: 2rem; }
+    .tl-dot { position: absolute; left: -1.82rem; top: 0.2rem; width: 10px; height: 10px; border-radius: 50%; background: var(--accent2); border: 2px solid var(--bg); }
+    .tl-label { font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--accent1); letter-spacing: 0.1em; margin-bottom: 0.3rem; }
+    .tl-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; margin-bottom: 0.3rem; }
+    .tl-body { font-size: 0.88rem; line-height: 1.65; color: var(--muted); }
+
+    .sidebar-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.8rem; position: sticky; top: 6rem; }
+    .sidebar-card h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.05rem; margin-bottom: 1.2rem; }
+    .sidebar-item { display: flex; gap: 0.8rem; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
+    .sidebar-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .sidebar-icon { font-size: 1.2rem; flex-shrink: 0; }
+    .sidebar-label { font-family: 'Space Mono', monospace; font-size: 0.62rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.2rem; }
+    .sidebar-value { font-size: 0.88rem; color: var(--text); }
+
+    .qr-section {
+      background: var(--card); border: 1px solid var(--accent1);
+      border-radius: 12px; padding: 2rem; margin: 2rem 0;
+      display: flex; gap: 2rem; align-items: center;
+    }
+    .qr-box {
+      width: 100px; height: 100px; flex-shrink: 0;
+      background: white; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.6rem; color: #333; text-align: center; padding: 0.5rem;
+      font-family: 'Space Mono', monospace;
+    }
+    .qr-content h4 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.05rem; margin-bottom: 0.5rem; }
+    .qr-content p { font-size: 0.88rem; color: var(--muted); line-height: 1.6; }
+
+    .nav-pages { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); }
+    .page-link { display: block; flex: 1; min-width: 200px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 1.3rem; text-decoration: none; color: inherit; transition: all 0.25s; }
+    .page-link:hover { border-color: var(--accent1); transform: translateY(-2px); }
+    .page-link-label { font-family: 'Space Mono', monospace; font-size: 0.62rem; color: var(--muted); text-transform: uppercase; margin-bottom: 0.4rem; }
+    .page-link-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; color: var(--accent2); }
+
+    footer { border-top: 1px solid var(--border); padding: 2rem 3rem; display: flex; justify-content: space-between; align-items: center; }
+    .footer-brand { font-family: 'Syne', sans-serif; font-weight: 800; color: var(--text); }
+    .footer-brand span { color: var(--accent2); }
+    .footer-copy { font-family: 'Space Mono', monospace; font-size: 0.62rem; color: var(--muted); }
+
+    [data-lang="en"] { display: none; }
+
+    @media (max-width: 900px) {
+      nav { padding: 1rem 1.5rem; }
+      .hero-sub { padding: 7rem 1.5rem 3rem; }
+      .content { padding: 3rem 1.5rem; }
+      .content-grid { grid-template-columns: 1fr; }
+      .pillar-grid { grid-template-columns: 1fr; }
+      .qr-section { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="../index.html" class="nav-logo">Col<span>5.0</span></a>
+    <a href="../index.html" class="nav-back" data-lang="es">← Volver al inicio</a>
+    <a href="../index.html" class="nav-back" data-lang="en" style="display:none">← Back to home</a>
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('es')">ES</button>
+      <button class="lang-btn" onclick="setLang('en')">EN</button>
+    </div>
+  </nav>
+
+  <div class="hero-sub">
+    <div class="hero-sub-img"><img src="../images/img1.jpg" alt="Colombia 5.0 apertura" /></div>
+    <div class="hero-sub-grid"></div>
+    <div class="breadcrumb">
+      <a href="../index.html">Colombia 5.0</a> / <span data-lang="es">La Iniciativa</span><span data-lang="en" style="display:none">The Initiative</span>
+    </div>
+    <div class="hero-tag" data-lang="es">🇨🇴 Política TIC · Ministerio</div>
+    <div class="hero-tag" data-lang="en" style="display:none">🇨🇴 ICT Policy · Ministry</div>
+    <h1>
+      <span data-lang="es">La<br/><em>Iniciativa</em><br/>Colombia 5.0</span>
+      <span data-lang="en" style="display:none">The<br/><em>Colombia 5.0</em><br/>Initiative</span>
+    </h1>
+    <p class="subtitle" data-lang="es">Acceso, soberanía y productividad: los tres pilares de la apuesta más ambiciosa de Colombia por su futuro digital.</p>
+    <p class="subtitle" data-lang="en" style="display:none">Access, sovereignty and productivity: the three pillars of Colombia's most ambitious bet for its digital future.</p>
+  </div>
+
+  <div class="content">
+    <div class="content-grid">
+      <div>
+        <p class="section-tag" data-lang="es">// Qué es Colombia 5.0</p>
+        <p class="section-tag" data-lang="en" style="display:none">// What is Colombia 5.0</p>
+        <h2 class="section-title" data-lang="es">Una agenda<br/>para todos</h2>
+        <h2 class="section-title" data-lang="en" style="display:none">An agenda<br/>for everyone</h2>
+
+        <p class="body-text" data-lang="es">
+          Colombia 5.0 es mucho más que un evento. Es una iniciativa nacional impulsada por el <strong>Ministerio de Tecnologías de la Información y las Comunicaciones (MinTIC)</strong>, diseñada para posicionar a Colombia como un referente en transformación digital en América Latina. El nombre no es casualino: remite a las sucesivas revoluciones industriales y tecnológicas que han definido la historia humana, y propone que Colombia entre de lleno, activa y soberanamente, en esta nueva era.
+        </p>
+        <p class="body-text" data-lang="en" style="display:none">
+          Colombia 5.0 is much more than an event. It is a national initiative driven by the <strong>Ministry of Information and Communication Technologies (MinTIC)</strong>, designed to position Colombia as a benchmark in digital transformation in Latin America. The name is not coincidental: it refers to the successive industrial and technological revolutions that have defined human history, and proposes that Colombia enter fully, actively and sovereignly, into this new era.
+        </p>
+
+        <img src="../images/img1.jpg" alt="Colombia 5.0 pantalla principal" class="img-full" />
+
+        <p class="body-text" data-lang="es">
+          El evento de Corferias fue la manifestación pública más visible de esta iniciativa, pero su alcance va mucho más allá de un día en Bogotá. Colombia 5.0 busca articular un ecosistema completo: conectar ciudadanos, empresas, gobierno y academia alrededor de una visión compartida del futuro digital del país. En alianza con <strong>Tr-ce</strong>, la plataforma se convierte en un espacio de participación continua donde la ciudadanía puede influir directamente en la agenda tecnológica nacional.
+        </p>
+        <p class="body-text" data-lang="en" style="display:none">
+          The Corferias event was the most visible public manifestation of this initiative, but its reach goes far beyond a day in Bogotá. Colombia 5.0 seeks to articulate a complete ecosystem: connecting citizens, businesses, government and academia around a shared vision of the country's digital future. In partnership with <strong>Tr-ce</strong>, the platform becomes a space for continuous participation where citizens can directly influence the national technology agenda.
+        </p>
+
+        <p class="section-tag" style="margin-top:3rem" data-lang="es">// Los Tres Pilares</p>
+        <p class="section-tag" style="margin-top:3rem" data-lang="en" style="display:none">// The Three Pillars</p>
+        <h3 style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.4rem;margin-bottom:1.5rem;" data-lang="es">Acceso · Soberanía · Productividad</h3>
+        <h3 style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.4rem;margin-bottom:1.5rem;" data-lang="en" style="display:none">Access · Sovereignty · Productivity</h3>
+
+        <div class="pillar-grid">
+          <div class="pillar-card">
+            <div class="pillar-icon">🌐</div>
+            <div class="pillar-name" data-lang="es">Acceso</div>
+            <div class="pillar-name" data-lang="en" style="display:none">Access</div>
+            <div class="pillar-desc" data-lang="es">Que ningún colombiano quede excluido de la revolución digital. Conectividad, dispositivos, educación y alfabetización tecnológica para todos, sin importar la región o el estrato.</div>
+            <div class="pillar-desc" data-lang="en" style="display:none">That no Colombian is excluded from the digital revolution. Connectivity, devices, education and technological literacy for all, regardless of region or socioeconomic status.</div>
+          </div>
+          <div class="pillar-card">
+            <div class="pillar-icon">🛡️</div>
+            <div class="pillar-name" data-lang="es">Soberanía</div>
+            <div class="pillar-name" data-lang="en" style="display:none">Sovereignty</div>
+            <div class="pillar-desc" data-lang="es">Que Colombia desarrolle capacidades propias. Que no dependa eternamente de tecnología extranjera. Que tengamos datos, infraestructura, talento y regulación propios.</div>
+            <div class="pillar-desc" data-lang="en" style="display:none">That Colombia develops its own capabilities. That it doesn't eternally depend on foreign technology. That we have our own data, infrastructure, talent and regulation.</div>
+          </div>
+          <div class="pillar-card">
+            <div class="pillar-icon">⚡</div>
+            <div class="pillar-name" data-lang="es">Productividad</div>
+            <div class="pillar-name" data-lang="en" style="display:none">Productivity</div>
+            <div class="pillar-desc" data-lang="es">Que la tecnología se traduzca en bienestar real. Mejor salud, educación, empleo, emprendimiento y calidad de vida para los colombianos de hoy y de mañana.</div>
+            <div class="pillar-desc" data-lang="en" style="display:none">That technology translates into real wellbeing. Better health, education, employment, entrepreneurship and quality of life for Colombians today and tomorrow.</div>
+          </div>
+        </div>
+
+        <div class="pullquote">
+          <p data-lang="es">"Tu opinión construye Colombia 5.0. Tu calificación nos ayuda a traer a los mejores expertos y a construir una agenda tecnológica con sentido humano para el país."</p>
+          <p data-lang="en" style="display:none">"Your opinion builds Colombia 5.0. Your rating helps us bring the best experts and build a technology agenda with a human sense for the country."</p>
+          <cite data-lang="es">— Ministerio TIC · Colombia 5.0, 2026</cite>
+          <cite data-lang="en" style="display:none">— Ministry of ICT · Colombia 5.0, 2026</cite>
+        </div>
+
+        <p class="section-tag" style="margin-top:2.5rem" data-lang="es">// La Democracia Digital</p>
+        <p class="section-tag" style="margin-top:2.5rem" data-lang="en" style="display:none">// Digital Democracy</p>
+        <h3 style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.4rem;margin-bottom:1.5rem;" data-lang="es">El QR que cambió las reglas</h3>
+        <h3 style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.4rem;margin-bottom:1.5rem;" data-lang="en" style="display:none">The QR that changed the rules</h3>
+
+        <div class="qr-section">
+          <div class="qr-box">📱<br/>QR CODE<br/>Colombia 5.0</div>
+          <div class="qr-content">
+            <h4 data-lang="es">¡Ayúdanos a definir el futuro!</h4>
+            <h4 data-lang="en" style="display:none">Help us define the future!</h4>
+            <p data-lang="es">En la pantalla gigante del pabellón, visible para todos los asistentes, el mensaje era claro: escanea, califica, participa. No eras un espectador del evento; eras un co-creador de la agenda tecnológica del país.</p>
+            <p data-lang="en" style="display:none">On the giant screen of the pavilion, visible to all attendees, the message was clear: scan, rate, participate. You were not a spectator of the event; you were a co-creator of the country's technology agenda.</p>
+          </div>
+        </div>
+
+        <p class="body-text" data-lang="es">
+          El detalle del código QR puede parecer menor, pero en el contexto de Colombia 5.0 es profundamente simbólico. Por primera vez, un evento de este alcance gubernamental invitaba a los ciudadanos a ser partícipes activos, no solo audiencia pasiva. La capacidad de calificar ponentes, proponer temas y votar por agendas convierte a Colombia 5.0 en un ejercicio real de democracia digital.
+        </p>
+        <p class="body-text" data-lang="en" style="display:none">
+          The QR code detail may seem minor, but in the context of Colombia 5.0 it is deeply symbolic. For the first time, an event of this governmental scope invited citizens to be active participants, not just a passive audience. The ability to rate speakers, propose topics and vote on agendas turns Colombia 5.0 into a real exercise in digital democracy.
+        </p>
+
+        <p class="section-tag" style="margin-top:2.5rem" data-lang="es">// La Hoja de Ruta</p>
+        <p class="section-tag" style="margin-top:2.5rem" data-lang="en" style="display:none">// The Roadmap</p>
+        <h3 style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.4rem;margin-bottom:1.5rem;" data-lang="es">El camino hacia 5.0</h3>
+        <h3 style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.4rem;margin-bottom:1.5rem;" data-lang="en" style="display:none">The path to 5.0</h3>
+
+        <div class="timeline">
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-label" data-lang="es">Primer Paso</div>
+            <div class="tl-label" data-lang="en" style="display:none">First Step</div>
+            <div class="tl-title" data-lang="es">Conectar a Colombia</div>
+            <div class="tl-title" data-lang="en" style="display:none">Connecting Colombia</div>
+            <div class="tl-body" data-lang="es">Garantizar acceso a internet de calidad para el 100% de los municipios del país. La conectividad como derecho fundamental, no como privilegio.</div>
+            <div class="tl-body" data-lang="en" style="display:none">Guaranteeing quality internet access for 100% of the country's municipalities. Connectivity as a fundamental right, not a privilege.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-label" data-lang="es">Segundo Paso</div>
+            <div class="tl-label" data-lang="en" style="display:none">Second Step</div>
+            <div class="tl-title" data-lang="es">Formar el Talento</div>
+            <div class="tl-title" data-lang="en" style="display:none">Building Talent</div>
+            <div class="tl-body" data-lang="es">Inversión masiva en educación digital, programas de coding, alfabetización en IA y formación técnica para el trabajo del futuro en todos los niveles educativos.</div>
+            <div class="tl-body" data-lang="en" style="display:none">Massive investment in digital education, coding programs, AI literacy and technical training for the future of work at all educational levels.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-label" data-lang="es">Tercer Paso</div>
+            <div class="tl-label" data-lang="en" style="display:none">Third Step</div>
+            <div class="tl-title" data-lang="es">Crear el Ecosistema</div>
+            <div class="tl-title" data-lang="en" style="display:none">Creating the Ecosystem</div>
+            <div class="tl-body" data-lang="es">Regulación inteligente, incentivos a startups, conexión entre academia y empresa, fondos de innovación y un marco legal que proteja los datos de los ciudadanos colombianos.</div>
+            <div class="tl-body" data-lang="en" style="display:none">Smart regulation, startup incentives, connection between academia and business, innovation funds and a legal framework that protects the data of Colombian citizens.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-label" data-lang="es">Visión Final</div>
+            <div class="tl-label" data-lang="en" style="display:none">Final Vision</div>
+            <div class="tl-title" data-lang="es">Colombia como Referente Digital</div>
+            <div class="tl-title" data-lang="en" style="display:none">Colombia as a Digital Benchmark</div>
+            <div class="tl-body" data-lang="es">Que en los próximos años, cuando el mundo hable de transformación digital en el sur global, Colombia sea uno de los primeros nombres que venga a la mente. No como aspiración: como realidad.</div>
+            <div class="tl-body" data-lang="en" style="display:none">That in the coming years, when the world speaks of digital transformation in the global south, Colombia is one of the first names that comes to mind. Not as an aspiration: as reality.</div>
+          </div>
+        </div>
+
+        <p class="body-text" data-lang="es">
+          Lo que se vivió en Colombia 5.0 fue apenas el comienzo. Un disparo de salida. Una demostración de que el país está listo para la conversación, que existe el talento, la voluntad y la urgencia de avanzar. El reto ahora es que ese impulso del evento se traduzca en políticas concretas, en inversión sostenida, en cambios culturales profundos y en resultados medibles para los colombianos más allá de los grandes auditorios.
+        </p>
+        <p class="body-text" data-lang="en" style="display:none">
+          What was experienced at Colombia 5.0 was just the beginning. A starting pistol. A demonstration that the country is ready for the conversation, that the talent, will and urgency to move forward exists. The challenge now is for that event impulse to translate into concrete policies, sustained investment, deep cultural changes and measurable results for Colombians beyond the big auditoriums.
+        </p>
+
+        <div class="nav-pages">
+          <a href="ia.html" class="page-link">
+            <div class="page-link-label" data-lang="es">← Anterior</div>
+            <div class="page-link-label" data-lang="en" style="display:none">← Previous</div>
+            <div class="page-link-title" data-lang="es">Uso de la IA</div>
+            <div class="page-link-title" data-lang="en" style="display:none">AI Use</div>
+          </a>
+          <a href="jair-ramirez.html" class="page-link">
+            <div class="page-link-label" data-lang="es">→ Ver también</div>
+            <div class="page-link-label" data-lang="en" style="display:none">→ See also</div>
+            <div class="page-link-title" data-lang="es">Jair Ramírez · Spider-Man con IA</div>
+            <div class="page-link-title" data-lang="en" style="display:none">Jair Ramírez · Spider-Man with AI</div>
+          </a>
+          <a href="../index.html" class="page-link">
+            <div class="page-link-label" data-lang="es">🏠 Inicio</div>
+            <div class="page-link-label" data-lang="en" style="display:none">🏠 Home</div>
+            <div class="page-link-title" data-lang="es">La Experiencia Completa</div>
+            <div class="page-link-title" data-lang="en" style="display:none">The Full Experience</div>
+          </a>
+        </div>
+      </div>
+
+      <div>
+        <div class="sidebar-card">
+          <h3 data-lang="es">Datos del Evento</h3>
+          <h3 data-lang="en" style="display:none">Event Info</h3>
+          <div class="sidebar-item">
+            <div class="sidebar-icon">🏛️</div>
+            <div>
+              <div class="sidebar-label" data-lang="es">Organizador</div>
+              <div class="sidebar-label" data-lang="en" style="display:none">Organizer</div>
+              <div class="sidebar-value" data-lang="es">Ministerio TIC · Colombia</div>
+              <div class="sidebar-value" data-lang="en" style="display:none">Ministry of ICT · Colombia</div>
+            </div>
+          </div>
+          <div class="sidebar-item">
+            <div class="sidebar-icon">🤝</div>
+            <div>
+              <div class="sidebar-label" data-lang="es">Alianza</div>
+              <div class="sidebar-label" data-lang="en" style="display:none">Partnership</div>
+              <div class="sidebar-value">Tr-ce</div>
+            </div>
+          </div>
+          <div class="sidebar-item">
+            <div class="sidebar-icon">📍</div>
+            <div>
+              <div class="sidebar-label" data-lang="es">Sede</div>
+              <div class="sidebar-label" data-lang="en" style="display:none">Venue</div>
+              <div class="sidebar-value" data-lang="es">Corferias · Bogotá, Colombia</div>
+              <div class="sidebar-value" data-lang="en" style="display:none">Corferias · Bogotá, Colombia</div>
+            </div>
+          </div>
+          <div class="sidebar-item">
+            <div class="sidebar-icon">📅</div>
+            <div>
+              <div class="sidebar-label" data-lang="es">Año</div>
+              <div class="sidebar-label" data-lang="en" style="display:none">Year</div>
+              <div class="sidebar-value">2026</div>
+            </div>
+          </div>
+          <div class="sidebar-item">
+            <div class="sidebar-icon">🎯</div>
+            <div>
+              <div class="sidebar-label" data-lang="es">Lema</div>
+              <div class="sidebar-label" data-lang="en" style="display:none">Motto</div>
+              <div class="sidebar-value" data-lang="es">Acceso, Soberanía y Productividad</div>
+              <div class="sidebar-value" data-lang="en" style="display:none">Access, Sovereignty and Productivity</div>
+            </div>
+          </div>
+          <div class="sidebar-item">
+            <div class="sidebar-icon">🌐</div>
+            <div>
+              <div class="sidebar-label" data-lang="es">Participación</div>
+              <div class="sidebar-label" data-lang="en" style="display:none">Participation</div>
+              <div class="sidebar-value" data-lang="es">Ciudadana vía QR · Digital</div>
+              <div class="sidebar-value" data-lang="en" style="display:none">Citizen via QR · Digital</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-brand">Col<span>5.0</span></div>
+    <div class="footer-copy">© 2026 Colombia 5.0 · Ministerio TIC · Tr-ce</div>
+  </footer>
+
+  <script>
+    function setLang(lang) {
+      document.querySelectorAll('[data-lang]').forEach(el => {
+        el.style.display = el.dataset.lang === lang ? '' : 'none';
+      });
+      document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`).classList.add('active');
+      localStorage.setItem('col50lang', lang);
+    }
+    const saved = localStorage.getItem('col50lang') || 'es';
+    setLang(saved);
+  </script>
+</body>
+</html>

@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Colombia 5.0 — La Experiencia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #050510;
+      --surface: #0d0d24;
+      --card: #111130;
+      --accent1: #6c2bff;
+      --accent2: #00e5ff;
+      --accent3: #ff3c6f;
+      --accent4: #39ff14;
+      --text: #e8e8f0;
+      --muted: #7070a0;
+      --border: rgba(108,43,255,0.25);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* Custom cursor */
+    .cursor {
+      position: fixed;
+      width: 12px; height: 12px;
+      background: var(--accent2);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transition: transform 0.1s;
+      mix-blend-mode: screen;
+    }
+    .cursor-ring {
+      position: fixed;
+      width: 36px; height: 36px;
+      border: 1.5px solid var(--accent1);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transition: transform 0.18s, width 0.3s, height 0.3s;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 3rem;
+      background: rgba(5,5,16,0.75);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.3rem;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--accent2); }
+    .nav-links { display: flex; gap: 2rem; align-items: center; }
+    .nav-links a {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--accent2); }
+    .lang-toggle {
+      display: flex; gap: 0.4rem;
+    }
+    .lang-btn {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      padding: 0.3rem 0.7rem;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .lang-btn.active, .lang-btn:hover {
+      border-color: var(--accent2);
+      color: var(--accent2);
+      background: rgba(0,229,255,0.07);
+    }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 6rem 3rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 70% 60% at 60% 30%, rgba(108,43,255,0.2) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 40% at 20% 70%, rgba(0,229,255,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 50% at 80% 80%, rgba(255,60,111,0.1) 0%, transparent 60%);
+    }
+    .hero-grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(108,43,255,0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(108,43,255,0.06) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    .hero-scanlines {
+      position: absolute; inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 3px,
+        rgba(0,0,0,0.08) 3px,
+        rgba(0,0,0,0.08) 4px
+      );
+      pointer-events: none;
+    }
+    .hero-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      color: var(--accent2);
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.2s forwards;
+    }
+    .hero-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(3.5rem, 10vw, 8.5rem);
+      line-height: 0.92;
+      letter-spacing: -0.04em;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.35s forwards;
+    }
+    .hero-title .line2 { color: var(--accent1); }
+    .hero-title .line3 {
+      -webkit-text-stroke: 2px var(--accent2);
+      color: transparent;
+    }
+    .hero-desc {
+      max-width: 580px;
+      font-size: 1.05rem;
+      line-height: 1.75;
+      color: var(--muted);
+      margin-bottom: 3rem;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.5s forwards;
+    }
+    .hero-ctas {
+      display: flex; gap: 1rem; flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.65s forwards;
+    }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.9rem 2rem;
+      background: var(--accent1);
+      color: white;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      letter-spacing: 0.05em;
+      text-decoration: none;
+      border-radius: 6px;
+      transition: all 0.25s;
+      border: none; cursor: pointer;
+    }
+    .btn-primary:hover {
+      background: #7c3fff;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(108,43,255,0.4);
+    }
+    .btn-outline {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.9rem 2rem;
+      border: 1.5px solid var(--accent2);
+      color: var(--accent2);
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      letter-spacing: 0.05em;
+      text-decoration: none;
+      border-radius: 6px;
+      transition: all 0.25s;
+      background: transparent; cursor: pointer;
+    }
+    .btn-outline:hover {
+      background: rgba(0,229,255,0.1);
+      transform: translateY(-2px);
+    }
+    .hero-stats {
+      position: absolute; right: 3rem; bottom: 4rem;
+      display: flex; flex-direction: column; gap: 2rem;
+      opacity: 0;
+      animation: fadeIn 1s 1s forwards;
+    }
+    .stat {
+      text-align: right;
+    }
+    .stat-num {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 2.5rem;
+      line-height: 1;
+      color: var(--accent2);
+    }
+    .stat-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .scroll-indicator {
+      position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      animation: bounce 2s infinite;
+    }
+    .scroll-line {
+      width: 1px; height: 40px;
+      background: linear-gradient(to bottom, var(--accent2), transparent);
+    }
+
+    /* SECTIONS */
+    section { padding: 6rem 3rem; }
+    .section-tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      color: var(--accent2);
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(2rem, 5vw, 3.8rem);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.5rem;
+    }
+    .section-body {
+      font-size: 1rem;
+      line-height: 1.8;
+      color: var(--muted);
+      max-width: 700px;
+    }
+
+    /* ABOUT SECTION */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+      margin-top: 4rem;
+    }
+    .about-text p {
+      font-size: 1rem;
+      line-height: 1.85;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+    }
+    .about-text p strong { color: var(--text); }
+    .about-image-stack {
+      position: relative;
+      height: 520px;
+    }
+    .img-card {
+      position: absolute;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .img-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .img-card.main { width: 75%; height: 380px; top: 0; right: 0; }
+    .img-card.secondary { width: 55%; height: 240px; bottom: 0; left: 0;
+      border: 2px solid var(--accent1); }
+    .img-badge {
+      position: absolute;
+      top: -1rem; left: -1rem;
+      background: var(--accent1);
+      color: white;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* EXPERIENCE SECTION */
+    .experience-section { background: var(--surface); }
+    .experience-intro {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 4rem;
+      margin-bottom: 4rem;
+    }
+    .experience-intro .section-body { max-width: 100%; }
+    .experience-quote {
+      border-left: 3px solid var(--accent1);
+      padding-left: 2rem;
+    }
+    .experience-quote blockquote {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.4rem;
+      line-height: 1.5;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 1rem;
+    }
+    .experience-quote cite {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--accent2);
+      letter-spacing: 0.1em;
+    }
+
+    /* IMAGE GALLERY */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: auto auto;
+      gap: 1rem;
+      margin-top: 3rem;
+    }
+    .gallery-item {
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+      border: 1px solid var(--border);
+      cursor: pointer;
+    }
+    .gallery-item:first-child {
+      grid-column: span 2;
+      grid-row: span 1;
+    }
+    .gallery-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s;
+    }
+    .gallery-item:hover img { transform: scale(1.04); }
+    .gallery-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(5,5,16,0.85) 0%, transparent 50%);
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 1.2rem;
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .gallery-item:hover .gallery-overlay { opacity: 1; }
+    .gallery-caption {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--accent2);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* TALKS / CONFERENCES */
+    .talks-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+    .talk-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .talk-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--accent1), var(--accent2));
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.3s;
+    }
+    .talk-card:hover { transform: translateY(-4px); border-color: var(--accent1); }
+    .talk-card:hover::before { transform: scaleX(1); }
+    .talk-number {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--accent2);
+      letter-spacing: 0.15em;
+      margin-bottom: 0.8rem;
+    }
+    .talk-tag {
+      display: inline-block;
+      background: rgba(108,43,255,0.2);
+      color: var(--accent1);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 3px;
+      margin-bottom: 1rem;
+      letter-spacing: 0.08em;
+    }
+    .talk-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1.3rem;
+      margin-bottom: 0.8rem;
+      color: var(--text);
+    }
+    .talk-speaker {
+      font-size: 0.85rem;
+      color: var(--accent2);
+      margin-bottom: 1rem;
+    }
+    .talk-body {
+      font-size: 0.88rem;
+      line-height: 1.7;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+    }
+    .talk-meta {
+      display: flex; gap: 1.5rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+    }
+    .talk-cta {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--accent2);
+      margin-top: 1rem;
+    }
+    .talk-cta::after { content: '→'; }
+
+    /* ROBOT SECTION */
+    .robot-section {
+      background: linear-gradient(135deg, #0a0a20 0%, #120820 100%);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .robot-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center;
+      margin-top: 3rem;
+    }
+    .robot-image {
+      border-radius: 16px; overflow: hidden;
+      border: 1px solid var(--border);
+      position: relative;
+    }
+    .robot-image img { width: 100%; display: block; }
+    .robot-image-tag {
+      position: absolute; bottom: 1rem; left: 1rem;
+      background: rgba(5,5,16,0.85);
+      border: 1px solid var(--accent4);
+      color: var(--accent4);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .robot-content p {
+      font-size: 1rem;
+      line-height: 1.85;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+    }
+    .robot-content p strong { color: var(--text); }
+    .highlight-box {
+      border: 1px solid var(--accent4);
+      border-radius: 8px;
+      padding: 1.2rem 1.5rem;
+      background: rgba(57,255,20,0.05);
+      font-size: 0.9rem;
+      color: var(--accent4);
+      font-family: 'Space Mono', monospace;
+      margin-top: 1.5rem;
+    }
+
+    /* MOMENT SECTION */
+    .moments-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+    .moment-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.8rem;
+    }
+    .moment-icon {
+      font-size: 2rem; margin-bottom: 1rem;
+    }
+    .moment-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      margin-bottom: 0.7rem;
+      color: var(--text);
+    }
+    .moment-body {
+      font-size: 0.88rem;
+      line-height: 1.7;
+      color: var(--muted);
+    }
+
+    /* CTA BANNER */
+    .cta-banner {
+      text-align: center;
+      padding: 6rem 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-banner::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 60% 80% at 50% 50%, rgba(108,43,255,0.25) 0%, transparent 70%);
+    }
+    .cta-banner .section-title { font-size: clamp(2rem, 5vw, 4rem); }
+    .cta-banner .section-body { margin: 0 auto 3rem; max-width: 580px; text-align: center; }
+    .cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 3rem;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 2rem;
+    }
+    .footer-brand {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+    }
+    .footer-brand span { color: var(--accent2); }
+    .footer-copy {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+    }
+    .footer-links { display: flex; gap: 1.5rem; }
+    .footer-links a {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--accent2); }
+
+    /* DIVIDER */
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+      margin: 0 3rem;
+    }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(-8px); }
+    }
+    @keyframes glitch {
+      0%, 100% { clip-path: none; }
+      92% { clip-path: none; transform: none; }
+      93% { clip-path: polygon(0 20%, 100% 20%, 100% 40%, 0 40%); transform: translateX(-4px); color: var(--accent3); }
+      94% { clip-path: none; transform: none; color: var(--text); }
+      96% { clip-path: polygon(0 60%, 100% 60%, 100% 80%, 0 80%); transform: translateX(3px); color: var(--accent2); }
+      97% { clip-path: none; transform: none; color: var(--text); }
+    }
+
+    .glitch { animation: glitch 5s infinite; }
+
+    /* Reveal on scroll */
+    .reveal {
+      opacity: 0; transform: translateY(30px);
+      transition: opacity 0.7s, transform 0.7s;
+    }
+    .reveal.visible {
+      opacity: 1; transform: translateY(0);
+    }
+
+    /* LANGUAGE VISIBILITY */
+    [data-lang="en"] { display: none; }
+
+    @media (max-width: 900px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      section { padding: 4rem 1.5rem; }
+      .hero { padding: 6rem 1.5rem 3rem; }
+      .about-grid, .experience-intro, .robot-grid { grid-template-columns: 1fr; }
+      .about-image-stack { height: 320px; margin-top: 2rem; }
+      .hero-stats { right: 1.5rem; }
+      .gallery { grid-template-columns: 1fr 1fr; }
+      .gallery-item:first-child { grid-column: span 2; }
+      .moments-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Custom Cursor -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="nav-logo">Col<span>5.0</span></a>
+    <div class="nav-links">
+      <a href="#sobre-el-evento" data-lang="es">El Evento</a>
+      <a href="#sobre-el-evento" data-lang="en" style="display:none">The Event</a>
+      <a href="#conferencias" data-lang="es">Conferencias</a>
+      <a href="#conferencias" data-lang="en" style="display:none">Talks</a>
+      <a href="#robot" data-lang="es">Robot & Más</a>
+      <a href="#robot" data-lang="en" style="display:none">Robot & More</a>
+      <a href="#galeria" data-lang="es">Galería</a>
+      <a href="#galeria" data-lang="en" style="display:none">Gallery</a>
+      <a href="pages/ia.html" data-lang="es">Uso de la IA</a>
+      <a href="pages/ia.html" data-lang="en" style="display:none">AI Use</a>
+    </div>
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('es')">ES</button>
+      <button class="lang-btn" onclick="setLang('en')">EN</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-scanlines"></div>
+
+    <p class="hero-label" data-lang="es">Bogotá, Colombia · Junio 2026 · Corferias</p>
+    <p class="hero-label" data-lang="en" style="display:none">Bogotá, Colombia · June 2026 · Corferias</p>
+
+    <h1 class="hero-title glitch">
+      <span class="line1">COLOMBIA</span><br/>
+      <span class="line2">5.0</span><br/>
+      <span class="line3 " data-lang="es">LA EXPERIENCIA</span>
+      <span class="line3" data-lang="en" style="display:none">THE EXPERIENCE</span>
+    </h1>
+
+    <p class="hero-desc" data-lang="es">
+      Acceso, soberanía y productividad. Un evento que reunió a los grandes pensadores de la tecnología latinoamericana bajo un mismo techo en Corferias, Bogotá. Conferencias, robots humanoides, debates sobre IA y una energía colectiva que redefinió lo que significa ser parte del futuro digital de Colombia.
+    </p>
+    <p class="hero-desc" data-lang="en" style="display:none">
+      Access, sovereignty and productivity. An event that brought together the great minds of Latin American technology under one roof at Corferias, Bogotá. Conferences, humanoid robots, AI debates and a collective energy that redefined what it means to be part of Colombia's digital future.
+    </p>
+
+    <div class="hero-ctas">
+      <a href="#sobre-el-evento" class="btn-primary" data-lang="es">Explorar la Experiencia</a>
+      <a href="#sobre-el-evento" class="btn-primary" data-lang="en" style="display:none">Explore the Experience</a>
+      <a href="#galeria" class="btn-outline" data-lang="es">Ver Galería</a>
+      <a href="#galeria" class="btn-outline" data-lang="en" style="display:none">View Gallery</a>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-num">2+</div>
+        <div class="stat-label" data-lang="es">Conferencias</div>
+        <div class="stat-label" data-lang="en" style="display:none">Talks</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">∞</div>
+        <div class="stat-label" data-lang="es">Posibilidades</div>
+        <div class="stat-label" data-lang="en" style="display:none">Possibilities</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">1</div>
+        <div class="stat-label" data-lang="es">Robot Humanoide</div>
+        <div class="stat-label" data-lang="en" style="display:none">Humanoid Robot</div>
+      </div>
+    </div>
+
+    <div class="scroll-indicator">
+      <div class="scroll-line"></div>
+      <span>scroll</span>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- SOBRE EL EVENTO -->
+  <section id="sobre-el-evento">
+    <p class="section-tag reveal" data-lang="es">// Sobre el Evento</p>
+    <p class="section-tag reveal" data-lang="en" style="display:none">// About the Event</p>
+    <h2 class="section-title reveal" data-lang="es">Donde Colombia<br/>mira hacia adelante</h2>
+    <h2 class="section-title reveal" data-lang="en" style="display:none">Where Colombia<br/>looks forward</h2>
+
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <p data-lang="es">
+          Colombia 5.0 no es simplemente una feria tecnológica. Es una declaración. Organizado por el <strong>Ministerio TIC</strong> en alianza con <strong>Tr-ce</strong>, el evento se desplegó en los amplios pasillos y auditorios de <strong>Corferias, Bogotá</strong>, convocando a miles de ciudadanos, emprendedores, estudiantes y profesionales del sector tecnológico bajo un mismo propósito: imaginar y construir el futuro digital de Colombia.
+        </p>
+        <p data-lang="es">
+          Desde el primer momento en que uno cruza las puertas del pabellón, la atmósfera lo dice todo. Pantallas gigantes con gráficas neón en morado y verde, stands interactivos, el zumbido constante de conversaciones apasionadas y el aroma inconfundible de algo que está por comenzar. El lema del evento —<strong>"Acceso, soberanía y productividad"</strong>— no era un slogan vacío; era una filosofía que se respiraba en cada rincón.
+        </p>
+        <p data-lang="es">
+          La apuesta de Colombia 5.0 era clara: no hablar de tecnología solo para los expertos, sino democratizarla. Hacerla accesible para el ciudadano de a pie, para el joven que aún no sabe que podría convertirse en el próximo gran desarrollador colombiano, para la emprendedora que necesita herramientas digitales para escalar su negocio. El evento fue un puente tendido entre el presente y el mañana.
+        </p>
+        <p data-lang="es">
+          Y eso es exactamente lo que se vivió: un día donde el futuro no se contemplaba desde lejos, sino que se tocaba con las manos, se debatía en voz alta y se construía colectivamente. Un hito en la historia tecnológica del país.
+        </p>
+
+        <p data-lang="en" style="display:none">
+          Colombia 5.0 is not simply a tech fair. It's a declaration. Organized by the <strong>Ministry of ICT</strong> in partnership with <strong>Tr-ce</strong>, the event unfolded in the wide halls and auditoriums of <strong>Corferias, Bogotá</strong>, bringing together thousands of citizens, entrepreneurs, students and technology professionals under a single purpose: to imagine and build Colombia's digital future.
+        </p>
+        <p data-lang="en" style="display:none">
+          From the very first moment you cross the pavilion doors, the atmosphere says it all. Giant screens with neon graphics in purple and green, interactive stands, the constant hum of passionate conversations and the unmistakable scent of something about to begin. The event's motto — <strong>"Access, sovereignty and productivity"</strong> — was no empty slogan; it was a philosophy you breathed in every corner.
+        </p>
+        <p data-lang="en" style="display:none">
+          Colombia 5.0's bet was clear: not to talk about technology only for experts, but to democratize it. Make it accessible to the everyday citizen, to the young person who doesn't yet know they could become the next great Colombian developer, to the entrepreneur who needs digital tools to scale their business. The event was a bridge stretched between the present and tomorrow.
+        </p>
+        <p data-lang="en" style="display:none">
+          And that is exactly what was experienced: a day where the future was not contemplated from afar, but touched with one's hands, debated out loud and built collectively. A milestone in the country's technological history.
+        </p>
+      </div>
+
+      <div class="about-image-stack reveal">
+        <div class="img-card main">
+          <img src="images/img1.jpg" alt="Colombia 5.0 - Plenaria principal" />
+        </div>
+        <div class="img-card secondary">
+          <div class="img-badge" data-lang="es">En Vivo · Corferias</div>
+          <div class="img-badge" data-lang="en" style="display:none">Live · Corferias</div>
+          <img src="images/img5.jpg" alt="Colombia 5.0 - Auditorio" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- EXPERIENCE -->
+  <section class="experience-section" id="galeria">
+    <p class="section-tag reveal" data-lang="es">// La Atmósfera</p>
+    <p class="section-tag reveal" data-lang="en" style="display:none">// The Atmosphere</p>
+    <h2 class="section-title reveal" data-lang="es">Sentir el pulso<br/>del evento</h2>
+    <h2 class="section-title reveal" data-lang="en" style="display:none">Feeling the pulse<br/>of the event</h2>
+
+    <div class="experience-intro">
+      <div class="section-body reveal" data-lang="es">
+        Caminar por Colombia 5.0 era como moverse dentro de una visualización del futuro en tiempo real. Los pasillos de Corferias se transformaron en un ecosistema vivo donde cada stand, cada pantalla, cada conversación era una ventana hacia lo que Colombia puede llegar a ser en el mundo digital. Hubo momentos de asombro genuino, de esos que te dejan boquiabierto y con ganas de saber más. Hubo también momentos de reflexión profunda, provocados por ponentes que no vinieron a vender humo sino a generar pensamiento crítico sobre el rol de la inteligencia artificial en nuestras vidas.
+        <br/><br/>
+        La mezcla de públicos era fascinante: estudiantes universitarios con libretas en mano, empresarios buscando oportunidades, profesores recargando sus marcos conceptuales, curiosos que simplemente vieron el evento en redes y no se lo quisieron perder. Todos unidos por una pregunta común: ¿qué lugar ocupa Colombia en la revolución tecnológica global?
+      </div>
+      <div class="experience-quote reveal">
+        <blockquote data-lang="es">"Hoy más que nunca necesitan ser sus propios héroes."</blockquote>
+        <cite data-lang="es">— Jair Ramírez, Presidente de la Comisión de IA LATAM</cite>
+        <blockquote data-lang="en" style="display:none">"Today more than ever, you need to be your own heroes."</blockquote>
+        <cite data-lang="en" style="display:none">— Jair Ramírez, President of the LATAM AI Commission</cite>
+      </div>
+    </div>
+
+    <div class="gallery reveal">
+      <div class="gallery-item" style="height:320px;">
+        <img src="images/img3.jpg" alt="Conferencia Colombia 5.0" />
+        <div class="gallery-overlay">
+          <span class="gallery-caption" data-lang="es">Auditorio Principal · Jair Ramírez</span>
+          <span class="gallery-caption" data-lang="en" style="display:none">Main Auditorium · Jair Ramírez</span>
+        </div>
+      </div>
+      <div class="gallery-item" style="height:320px;">
+        <img src="images/img2.jpg" alt="Robot Humanoide" />
+        <div class="gallery-overlay">
+          <span class="gallery-caption" data-lang="es">Robot Humanoide · Unitree H1</span>
+          <span class="gallery-caption" data-lang="en" style="display:none">Humanoid Robot · Unitree H1</span>
+        </div>
+      </div>
+      <div class="gallery-item" style="height:220px;">
+        <img src="images/img4.jpg" alt="Uso incorrecto de la IA" />
+        <div class="gallery-overlay">
+          <span class="gallery-caption" data-lang="es">Uso Incorrecto de la IA · Charla</span>
+          <span class="gallery-caption" data-lang="en" style="display:none">Incorrect Use of AI · Talk</span>
+        </div>
+      </div>
+      <div class="gallery-item" style="height:220px;">
+        <img src="images/img5.jpg" alt="Perfil Ponente" />
+        <div class="gallery-overlay">
+          <span class="gallery-caption" data-lang="es">Presentación del Ponente</span>
+          <span class="gallery-caption" data-lang="en" style="display:none">Speaker Introduction</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- CONFERENCES -->
+  <section id="conferencias">
+    <p class="section-tag reveal" data-lang="es">// Conferencias</p>
+    <p class="section-tag reveal" data-lang="en" style="display:none">// Conferences</p>
+    <h2 class="section-title reveal" data-lang="es">Las charlas que<br/>marcaron el día</h2>
+    <h2 class="section-title reveal" data-lang="en" style="display:none">The talks that<br/>defined the day</h2>
+    <p class="section-body reveal" data-lang="es">Cada ponencia de Colombia 5.0 fue diseñada para provocar, inspirar y transformar. No fueron simples presentaciones técnicas; fueron experiencias que conectaron la tecnología con la humanidad, con preguntas urgentes sobre quiénes somos y hacia dónde vamos en la era digital.</p>
+    <p class="section-body reveal" data-lang="en" style="display:none">Each Colombia 5.0 talk was designed to provoke, inspire and transform. They were not simple technical presentations; they were experiences that connected technology with humanity, with urgent questions about who we are and where we are headed in the digital age.</p>
+
+    <div class="talks-grid">
+      <a href="pages/jair-ramirez.html" class="talk-card reveal">
+        <div class="talk-number">01</div>
+        <span class="talk-tag" data-lang="es">Inteligencia Artificial</span>
+        <span class="talk-tag" data-lang="en" style="display:none">Artificial Intelligence</span>
+        <h3 class="talk-title" data-lang="es">Spider-Man con IA: Héroes y Villanos del Mundo Digital</h3>
+        <h3 class="talk-title" data-lang="en" style="display:none">Spider-Man with AI: Heroes and Villains of the Digital World</h3>
+        <p class="talk-speaker">Jair Ramírez · <span data-lang="es">Presidente Comisión IA LATAM</span><span data-lang="en" style="display:none">President LATAM AI Commission</span></p>
+        <p class="talk-body" data-lang="es">Una conferencia que usó el universo de Spider-Man como metáfora para explorar los usos correctos e incorrectos de la inteligencia artificial. Jair Ramírez no vino a deslumbrar con tecnicismos; vino a cuestionar, a incomodar en el buen sentido, a hacernos pensar si somos héroes o cómplices en el uso que damos a la IA en nuestra vida cotidiana.</p>
+        <p class="talk-body" data-lang="en" style="display:none">A conference that used the Spider-Man universe as a metaphor to explore the correct and incorrect uses of artificial intelligence. Jair Ramírez didn't come to dazzle with technicalities; he came to question, to make us uncomfortable in a good way, to make us think whether we are heroes or accomplices in the way we use AI in our daily lives.</p>
+        <div class="talk-meta">
+          <span data-lang="es">📍 Auditorio Principal</span>
+          <span data-lang="en" style="display:none">📍 Main Auditorium</span>
+          <span data-lang="es">🕐 Tarde</span>
+          <span data-lang="en" style="display:none">🕐 Afternoon</span>
+        </div>
+        <div class="talk-cta" data-lang="es">Ver detalles </div>
+        <div class="talk-cta" data-lang="en" style="display:none">View details </div>
+      </a>
+
+      <a href="pages/colombia50-iniciativa.html" class="talk-card reveal">
+        <div class="talk-number">02</div>
+        <span class="talk-tag" data-lang="es">Política TIC</span>
+        <span class="talk-tag" data-lang="en" style="display:none">ICT Policy</span>
+        <h3 class="talk-title" data-lang="es">¡Ayúdanos a definir el futuro de Colombia 5.0!</h3>
+        <h3 class="talk-title" data-lang="en" style="display:none">Help us define the future of Colombia 5.0!</h3>
+        <p class="talk-speaker" data-lang="es">Ministerio TIC · En alianza con Tr-ce</p>
+        <p class="talk-speaker" data-lang="en" style="display:none">Ministry of ICT · In partnership with Tr-ce</p>
+        <p class="talk-body" data-lang="es">La apertura del evento presentó una convocatoria participativa: los ciudadanos podían escanear un código QR para calificar a los expertos e influir directamente en la agenda tecnológica del país. Un ejercicio de democracia digital en tiempo real que demostró que Colombia 5.0 no era un evento para contemplar, sino para co-construir.</p>
+        <p class="talk-body" data-lang="en" style="display:none">The opening of the event presented a participatory call: citizens could scan a QR code to rate experts and directly influence the country's technology agenda. A real-time digital democracy exercise that demonstrated that Colombia 5.0 was not an event to watch, but to co-build.</p>
+        <div class="talk-meta">
+          <span data-lang="es">📍 Pabellón 5 · Corferias</span>
+          <span data-lang="en" style="display:none">📍 Pavilion 5 · Corferias</span>
+          <span data-lang="es">🕐 Apertura</span>
+          <span data-lang="en" style="display:none">🕐 Opening</span>
+        </div>
+        <div class="talk-cta" data-lang="es">Ver detalles </div>
+        <div class="talk-cta" data-lang="en" style="display:none">View details </div>
+      </a>
+
+      <a href="pages/ia.html" class="talk-card reveal">
+        <div class="talk-number">03</div>
+        <span class="talk-tag" data-lang="es">Reflexión Crítica</span>
+        <span class="talk-tag" data-lang="en" style="display:none">Critical Reflection</span>
+        <h3 class="talk-title" data-lang="es">Uso Incorrecto de la IA</h3>
+        <h3 class="talk-title" data-lang="en" style="display:none">Incorrect Use of AI</h3>
+        <p class="talk-speaker">Jair Ramírez · <span data-lang="es">Colombia 5.0 · Tr-ce</span><span data-lang="en" style="display:none">Colombia 5.0 · Tr-ce</span></p>
+        <p class="talk-body" data-lang="es">Uno de los momentos más honestos del evento: una discusión sin filtros sobre cómo la inteligencia artificial puede ser mal utilizada, mal comprendida y mal aplicada. Jair Ramírez desplegó ejemplos reales, casos de estudio y una narrativa que mezcló humor con profundidad para dejar claro que tener acceso a la IA no equivale a saber usarla bien.</p>
+        <p class="talk-body" data-lang="en" style="display:none">One of the most honest moments of the event: an unfiltered discussion about how artificial intelligence can be misused, misunderstood and misapplied. Jair Ramírez deployed real examples, case studies and a narrative that blended humor with depth to make clear that having access to AI does not equal knowing how to use it well.</p>
+        <div class="talk-meta">
+          <span data-lang="es">📍 Auditorio Col 5.0</span>
+          <span data-lang="en" style="display:none">📍 Col 5.0 Auditorium</span>
+          <span data-lang="es">🕐 Sesión Principal</span>
+          <span data-lang="en" style="display:none">🕐 Main Session</span>
+        </div>
+        <div class="talk-cta" data-lang="es">Ver detalles </div>
+        <div class="talk-cta" data-lang="en" style="display:none">View details </div>
+      </a>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ROBOT SECTION -->
+  <section class="robot-section" id="robot">
+    <p class="section-tag reveal" data-lang="es">// Momento Estelar</p>
+    <p class="section-tag reveal" data-lang="en" style="display:none">// Stellar Moment</p>
+    <h2 class="section-title reveal" data-lang="es">El robot que<br/>detuvo el tiempo</h2>
+    <h2 class="section-title reveal" data-lang="en" style="display:none">The robot that<br/>stopped time</h2>
+
+    <div class="robot-grid">
+      <div class="robot-image reveal">
+        <img src="images/img2.jpg" alt="Robot Humanoide Colombia 5.0" />
+        <div class="robot-image-tag" data-lang="es">🤖 Robot Humanoide · En Vivo</div>
+        <div class="robot-image-tag" data-lang="en" style="display:none">🤖 Humanoid Robot · Live</div>
+      </div>
+
+      <div class="robot-content reveal">
+        <p data-lang="es">
+          Si hay un momento que define la experiencia de Colombia 5.0, es este. En medio de los stands y la algarabía del evento, apareció un <strong>robot humanoide</strong> —del tipo que uno ve en videos de YouTube y piensa que aún está a décadas de distancia— caminando por los pasillos de Corferias como si fuera lo más natural del mundo. No era un video, no era una proyección: era real, estaba ahí, y la gente a su alrededor no podía ocultar la mezcla de asombro, risa nerviosa y genuino deleite.
+        </p>
+        <p data-lang="es">
+          El robot portaba el sello de la <strong>Universidad de La Sabana</strong>, lo que hizo el momento aún más especial: no era un artefacto importado de un laboratorio extranjero, sino una demostración del talento y la inversión tecnológica que existe en Colombia. Junto al robot, el <strong>Gansito</strong> —mascota icónica— añadió ese toque de identidad popular que hace que el país sea tan único. La imagen de un robot humanoide al lado de una mascota tradicional colombiana resumía perfectamente la dualidad del evento: tradición y futuro, humanidad y tecnología.
+        </p>
+        <p data-lang="es">
+          Las personas que se acercaron a interactuar con el robot lo hicieron con una mezcla de curiosidad y cautela, como quien se acerca a algo que sabe que cambiará su forma de ver el mundo. Y es que eso es exactamente lo que hizo: cambió perspectivas, generó preguntas, y plantó en la mente de todos los presentes una semilla de lo que podría ser la Colombia del mañana.
+        </p>
+
+        <p data-lang="en" style="display:none">
+          If there is one moment that defines the Colombia 5.0 experience, it is this one. In the middle of the stands and the commotion of the event, a <strong>humanoid robot</strong> appeared — the kind you see in YouTube videos and think is still decades away — walking through the halls of Corferias as if it were the most natural thing in the world. It was not a video, not a projection: it was real, it was there, and the people around it could not hide the mix of amazement, nervous laughter and genuine delight.
+        </p>
+        <p data-lang="en" style="display:none">
+          The robot bore the seal of <strong>Universidad de La Sabana</strong>, which made the moment even more special: it was not an artifact imported from a foreign laboratory, but a demonstration of the talent and technological investment that exists in Colombia. Alongside the robot, <strong>Gansito</strong> — an iconic mascot — added that touch of popular identity that makes the country so unique. The image of a humanoid robot beside a traditional Colombian mascot perfectly summarized the duality of the event: tradition and future, humanity and technology.
+        </p>
+        <p data-lang="en" style="display:none">
+          The people who approached to interact with the robot did so with a mix of curiosity and caution, like someone approaching something they know will change their view of the world. And that is exactly what it did: it changed perspectives, generated questions, and planted in the minds of all those present a seed of what Colombia of tomorrow could be.
+        </p>
+
+        <div class="highlight-box" data-lang="es">
+          → Robot humanoide de Universidad de La Sabana · Gansito como embajador cultural · El encuentro más inesperado del evento
+        </div>
+        <div class="highlight-box" data-lang="en" style="display:none">
+          → Humanoid robot from Universidad de La Sabana · Gansito as cultural ambassador · The most unexpected encounter of the event
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- MEMORABLE MOMENTS -->
+  <section>
+    <p class="section-tag reveal" data-lang="es">// Lo que no se olvida</p>
+    <p class="section-tag reveal" data-lang="en" style="display:none">// What you don't forget</p>
+    <h2 class="section-title reveal" data-lang="es">Momentos que<br/>construyen memoria</h2>
+    <h2 class="section-title reveal" data-lang="en" style="display:none">Moments that<br/>build memory</h2>
+
+    <div class="moments-grid">
+      <div class="moment-card reveal">
+        <div class="moment-icon">🎯</div>
+        <h3 class="moment-title" data-lang="es">La Participación Ciudadana</h3>
+        <h3 class="moment-title" data-lang="en" style="display:none">Citizen Participation</h3>
+        <p class="moment-body" data-lang="es">El código QR en la pantalla gigante no era un detalle menor. Era una invitación directa al ciudadano a ser parte activa de la política tecnológica del país. Colombia 5.0 apostó por la participación colectiva como motor del cambio digital, algo que pocas iniciativas gubernamentales se atreven a hacer con tanta convicción.</p>
+        <p class="moment-body" data-lang="en" style="display:none">The QR code on the giant screen was not a minor detail. It was a direct invitation to citizens to be an active part of the country's technology policy. Colombia 5.0 bet on collective participation as the engine of digital change, something few government initiatives dare to do with such conviction.</p>
+      </div>
+      <div class="moment-card reveal">
+        <div class="moment-icon">🦸</div>
+        <h3 class="moment-title" data-lang="es">Los Héroes Sin Capa</h3>
+        <h3 class="moment-title" data-lang="en" style="display:none">The Cloakless Heroes</h3>
+        <p class="moment-body" data-lang="es">Jair Ramírez subió al escenario no para impresionar sino para desafiar. Su mensaje fue claro: en la era de la IA, los verdaderos héroes son quienes aprenden a usar las herramientas correctamente, quienes cuestionan, quienes no se dejan llevar por el hype sin comprensión. Necesitamos más Spider-Men críticos y menos usuarios pasivos.</p>
+        <p class="moment-body" data-lang="en" style="display:none">Jair Ramírez took the stage not to impress but to challenge. His message was clear: in the age of AI, the true heroes are those who learn to use tools correctly, those who question, those who don't get carried away by hype without understanding. We need more critical Spider-Men and fewer passive users.</p>
+      </div>
+      <div class="moment-card reveal">
+        <div class="moment-icon">🤝</div>
+        <h3 class="moment-title" data-lang="es">La Comunidad que Conecta</h3>
+        <h3 class="moment-title" data-lang="en" style="display:none">The Community that Connects</h3>
+        <p class="moment-body" data-lang="es">Entre charla y charla, en los pasillos, en las filas del café, en los stands: la gente hablaba. Se intercambiaban ideas, tarjetas, sueños. Colombia 5.0 creó el espacio para que el ecosistema tecnológico colombiano se viera a sí mismo reflejado, se reconociera, y se potenciara mutuamente. Esa energía de red es quizás el legado más invisible y más valioso del evento.</p>
+        <p class="moment-body" data-lang="en" style="display:none">Between talk and talk, in the hallways, in the coffee lines, at the stands: people talked. Ideas, cards, dreams were exchanged. Colombia 5.0 created the space for the Colombian technology ecosystem to see itself reflected, to recognize itself, and to strengthen each other. That network energy is perhaps the most invisible and most valuable legacy of the event.</p>
+      </div>
+      <div class="moment-card reveal">
+        <div class="moment-icon">🌐</div>
+        <h3 class="moment-title" data-lang="es">Soberanía Digital</h3>
+        <h3 class="moment-title" data-lang="en" style="display:none">Digital Sovereignty</h3>
+        <p class="moment-body" data-lang="es">Uno de los temas que más resonó fue el de la soberanía digital: ¿cómo puede Colombia desarrollar sus propias capacidades tecnológicas en lugar de depender eternamente de plataformas extranjeras? El debate fue rico, sin respuestas fáciles, pero con la claridad de que la pregunta ya no puede ignorarse. El país está despertando.</p>
+        <p class="moment-body" data-lang="en" style="display:none">One of the most resonant topics was digital sovereignty: how can Colombia develop its own technological capabilities instead of eternally depending on foreign platforms? The debate was rich, without easy answers, but with the clarity that the question can no longer be ignored. The country is waking up.</p>
+      </div>
+      <div class="moment-card reveal">
+        <div class="moment-icon">🎮</div>
+        <h3 class="moment-title" data-lang="es">Gamificación y Vida Real</h3>
+        <h3 class="moment-title" data-lang="en" style="display:none">Gamification and Real Life</h3>
+        <p class="moment-body" data-lang="es">El espíritu gamer estuvo presente en todo el evento, desde el diseño visual hasta la narrativa de las conferencias. La idea de que la vida puede diseñarse como un juego —con niveles, recompensas y misiones— no es una metáfora banal; es una filosofía poderosa que Colombia 5.0 abrazó con entusiasmo para hacer del aprendizaje algo genuinamente atractivo.</p>
+        <p class="moment-body" data-lang="en" style="display:none">The gamer spirit was present throughout the event, from the visual design to the narrative of the conferences. The idea that life can be designed like a game — with levels, rewards and missions — is not a banal metaphor; it is a powerful philosophy that Colombia 5.0 embraced enthusiastically to make learning genuinely attractive.</p>
+      </div>
+      <div class="moment-card reveal">
+        <div class="moment-icon">🇨🇴</div>
+        <h3 class="moment-title" data-lang="es">El Orgullo de Ser Colombia</h3>
+        <h3 class="moment-title" data-lang="en" style="display:none">The Pride of Being Colombia</h3>
+        <p class="moment-body" data-lang="es">Por encima de todo, Colombia 5.0 fue un recordatorio de que este país tiene talento, tiene ganas, tiene capacidad. No como un discurso de autoayuda, sino como una evidencia concreta: cada ponente, cada stand, cada asistente era prueba de que Colombia no está esperando el futuro sino que lo está construyendo activamente.</p>
+        <p class="moment-body" data-lang="en" style="display:none">Above all, Colombia 5.0 was a reminder that this country has talent, drive, and capability. Not as a self-help speech, but as concrete evidence: every speaker, every stand, every attendee was proof that Colombia is not waiting for the future but is actively building it.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BANNER -->
+  <section class="cta-banner">
+    <p class="section-tag" data-lang="es">// Explorar Más</p>
+    <p class="section-tag" data-lang="en" style="display:none">// Explore More</p>
+    <h2 class="section-title reveal" data-lang="es">Sumérgete en<br/>cada experiencia</h2>
+    <h2 class="section-title reveal" data-lang="en" style="display:none">Dive into<br/>each experience</h2>
+    <p class="section-body reveal" data-lang="es">Cada conferencia, cada momento del evento tiene su propia página con análisis en profundidad, galería de imágenes y reflexiones sobre lo que Colombia 5.0 significa para el futuro digital del país.</p>
+    <p class="section-body reveal" data-lang="en" style="display:none">Each conference, each moment of the event has its own page with in-depth analysis, image gallery and reflections on what Colombia 5.0 means for the country's digital future.</p>
+    <div class="cta-buttons reveal">
+      <a href="pages/jair-ramirez.html" class="btn-primary" data-lang="es">Ver Jair Ramírez →</a>
+      <a href="pages/jair-ramirez.html" class="btn-primary" data-lang="en" style="display:none">View Jair Ramírez →</a>
+      <a href="pages/ia.html" class="btn-outline" data-lang="es">Uso de la IA →</a>
+      <a href="pages/ia.html" class="btn-outline" data-lang="en" style="display:none">AI Use →</a>
+      <a href="pages/colombia50-iniciativa.html" class="btn-outline" data-lang="es">La Iniciativa →</a>
+      <a href="pages/colombia50-iniciativa.html" class="btn-outline" data-lang="en" style="display:none">The Initiative →</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div>
+      <div class="footer-brand">Col<span>5.0</span> — <span data-lang="es" style="color:var(--muted);font-family:'DM Sans';font-weight:400;font-size:0.9rem">La Experiencia</span><span data-lang="en" style="display:none;color:var(--muted);font-family:'DM Sans';font-weight:400;font-size:0.9rem">The Experience</span></div>
+      <div class="footer-copy" style="margin-top:0.5rem" data-lang="es">Bogotá · Corferias · Junio 2026</div>
+      <div class="footer-copy" style="margin-top:0.5rem" data-lang="en" style="display:none">Bogotá · Corferias · June 2026</div>
+    </div>
+    <div class="footer-links">
+      <a href="pages/jair-ramirez.html" data-lang="es">Jair Ramírez</a>
+      <a href="pages/jair-ramirez.html" data-lang="en" style="display:none">Jair Ramírez</a>
+      <a href="pages/ia.html" data-lang="es">Uso de la IA</a>
+      <a href="pages/ia.html" data-lang="en" style="display:none">AI Use</a>
+      <a href="pages/colombia50-iniciativa.html" data-lang="es">La Iniciativa</a>
+      <a href="pages/colombia50-iniciativa.html" data-lang="en" style="display:none">The Initiative</a>
+    </div>
+    <div class="footer-copy">© 2026 Colombia 5.0 · Ministerio TIC · Tr-ce</div>
+  </footer>
+
+  <script>
+    // Cursor
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursorRing');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+    function animateCursor() {
+      rx += (mx - rx) * 0.15; ry += (my - ry) * 0.15;
+      cursor.style.left = mx - 6 + 'px'; cursor.style.top = my - 6 + 'px';
+      ring.style.left = rx - 18 + 'px'; ring.style.top = ry - 18 + 'px';
+      requestAnimationFrame(animateCursor);
+    }
+    animateCursor();
+
+    // Reveal on scroll
+    const revealEls = document.querySelectorAll('.reveal');
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    revealEls.forEach(el => obs.observe(el));
+
+    // Language
+    function setLang(lang) {
+      document.querySelectorAll('[data-lang]').forEach(el => {
+        el.style.display = el.dataset.lang === lang ? '' : 'none';
+      });
+      document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`).classList.add('active');
+      document.documentElement.lang = lang;
+      localStorage.setItem('col50lang', lang);
+    }
+    const saved = localStorage.getItem('col50lang') || 'es';
+    setLang(saved);
+  </script>
+</body>
+</html>

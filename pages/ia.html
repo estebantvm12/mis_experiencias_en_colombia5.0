@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Uso de la IA — Colombia 5.0</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #050510;
+      --surface: #0d0d24;
+      --card: #111130;
+      --accent1: #6c2bff;
+      --accent2: #00e5ff;
+      --accent3: #ff3c6f;
+      --accent4: #39ff14;
+      --text: #e8e8f0;
+      --muted: #7070a0;
+      --border: rgba(108,43,255,0.25);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; overflow-x: hidden; }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 3rem;
+      background: rgba(5,5,16,0.85); backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.3rem; color: var(--text); text-decoration: none; }
+    .nav-logo span { color: var(--accent2); }
+    .nav-back { font-family: 'Space Mono', monospace; font-size: 0.72rem; color: var(--muted); text-decoration: none; letter-spacing: 0.08em; transition: color 0.2s; }
+    .nav-back:hover { color: var(--accent2); }
+    .lang-toggle { display: flex; gap: 0.4rem; }
+    .lang-btn { font-family: 'Space Mono', monospace; font-size: 0.7rem; padding: 0.3rem 0.7rem; border: 1px solid var(--border); background: transparent; color: var(--muted); border-radius: 4px; cursor: pointer; transition: all 0.2s; }
+    .lang-btn.active, .lang-btn:hover { border-color: var(--accent2); color: var(--accent2); background: rgba(0,229,255,0.07); }
+
+    .hero-sub {
+      min-height: 65vh;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 8rem 3rem 4rem;
+      position: relative; overflow: hidden;
+      background:
+        radial-gradient(ellipse 80% 60% at 30% 30%, rgba(255,60,111,0.15) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 50% at 80% 70%, rgba(108,43,255,0.12) 0%, transparent 60%);
+    }
+    .hero-sub-img { position: absolute; inset: 0; overflow: hidden; }
+    .hero-sub-img img { width: 100%; height: 100%; object-fit: cover; opacity: 0.12; filter: blur(3px); }
+    .hero-sub-grid {
+      position: absolute; inset: 0;
+      background-image: linear-gradient(rgba(255,60,111,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,60,111,0.05) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    .breadcrumb { font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--muted); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1.5rem; }
+    .breadcrumb a { color: var(--accent2); text-decoration: none; }
+    .hero-tag { display: inline-block; background: rgba(255,60,111,0.15); color: var(--accent3); font-family: 'Space Mono', monospace; font-size: 0.68rem; padding: 0.3rem 0.8rem; border-radius: 4px; margin-bottom: 1.2rem; letter-spacing: 0.1em; }
+    .hero-sub h1 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(2.5rem, 7vw, 6rem); line-height: 0.95; letter-spacing: -0.04em; margin-bottom: 1.5rem; }
+    .hero-sub h1 em { font-style: normal; color: var(--accent3); }
+    .hero-sub .subtitle { font-size: 1.1rem; color: var(--muted); max-width: 600px; line-height: 1.75; margin-bottom: 2rem; }
+
+    .content { max-width: 1100px; margin: 0 auto; padding: 5rem 3rem; }
+    .content-grid { display: grid; grid-template-columns: 1fr 340px; gap: 4rem; align-items: start; }
+
+    .section-tag { font-family: 'Space Mono', monospace; font-size: 0.68rem; letter-spacing: 0.2em; color: var(--accent3); text-transform: uppercase; margin-bottom: 1rem; }
+    .section-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(1.8rem, 4vw, 3rem); line-height: 1.05; letter-spacing: -0.03em; margin-bottom: 1.5rem; }
+    .body-text { font-size: 1rem; line-height: 1.9; color: var(--muted); margin-bottom: 1.5rem; }
+    .body-text strong { color: var(--text); }
+
+    .pullquote {
+      border-left: 3px solid var(--accent3);
+      padding: 1.5rem 1.5rem 1.5rem 2rem;
+      margin: 2.5rem 0;
+      background: rgba(255,60,111,0.05);
+      border-radius: 0 8px 8px 0;
+    }
+    .pullquote p { font-family: 'Syne', sans-serif; font-size: 1.3rem; font-weight: 600; line-height: 1.5; color: var(--text); margin-bottom: 0.5rem; }
+    .pullquote cite { font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--accent3); letter-spacing: 0.1em; }
+
+    .img-full { width: 100%; border-radius: 12px; margin: 2.5rem 0; border: 1px solid var(--border); display: block; }
+
+    .misuse-cards { display: grid; grid-template-columns: 1fr; gap: 1rem; margin: 2rem 0; }
+    .misuse-card {
+      background: var(--card); border: 1px solid rgba(255,60,111,0.2);
+      border-radius: 10px; padding: 1.3rem;
+      display: flex; gap: 1rem; align-items: flex-start;
+    }
+    .misuse-icon { font-size: 1.5rem; flex-shrink: 0; }
+    .misuse-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.95rem; margin-bottom: 0.4rem; color: var(--accent3); }
+    .misuse-body { font-size: 0.88rem; line-height: 1.65; color: var(--muted); }
+
+    .good-use-cards { display: grid; grid-template-columns: 1fr; gap: 1rem; margin: 2rem 0; }
+    .good-card {
+      background: var(--card); border: 1px solid rgba(57,255,20,0.2);
+      border-radius: 10px; padding: 1.3rem;
+      display: flex; gap: 1rem; align-items: flex-start;
+    }
+    .good-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.95rem; margin-bottom: 0.4rem; color: var(--accent4); }
+    .good-body { font-size: 0.88rem; line-height: 1.65; color: var(--muted); }
+
+    .sidebar-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.8rem; position: sticky; top: 6rem; }
+    .sidebar-card h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.05rem; margin-bottom: 1.2rem; }
+    .sidebar-item { display: flex; gap: 0.8rem; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
+    .sidebar-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .sidebar-icon { font-size: 1.2rem; flex-shrink: 0; }
+    .sidebar-label { font-family: 'Space Mono', monospace; font-size: 0.62rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.2rem; }
+    .sidebar-value { font-size: 0.88rem; color: var(--text); }
+
+    .stat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 2rem 0; }
+    .stat-box { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 1.3rem; text-align: center; }
+    .stat-num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 2.2rem; color: var(--accent3); line-height: 1; margin-bottom: 0.3rem; }
+    .stat-label { font-family: 'Space Mono', monospace; font-size: 0.62rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
+
+    .nav-pages { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); }
+    .page-link { display: block; flex: 1; min-width: 200px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 1.3rem; text-decoration: none; color: inherit; transition: all 0.25s; }
+    .page-link:hover { border-color: var(--accent3); transform: translateY(-2px); }
+    .page-link-label { font-family: 'Space Mono', monospace; font-size: 0.62rem; color: var(--muted); text-transform: uppercase; margin-bottom: 0.4rem; }
+    .page-link-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; color: var(--accent2); }
+
+    footer { border-top: 1px solid var(--border); padding: 2rem 3rem; display: flex; justify-content: space-between; align-items: center; }
+    .footer-brand { font-family: 'Syne', sans-serif; font-weight: 800; color: var(--text); }
+    .footer-brand span { color: var(--accent2); }
+    .footer-copy { font-family: 'Space Mono', monospace; font-size: 0.62rem; color: var(--muted); }
+
+    [data-lang="en"] { display: none; }
+
+    @media (max-width: 900px) {
+      nav { padding: 1rem 1.5rem; }
+      .hero-sub { padding: 7rem 1.5rem 3rem; }
+      .content { padding: 3rem 1.5rem; }
+      .content-grid { grid-template-columns: 1fr; }
+      .stat-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="../index.html" class="nav-logo">Col<span>5.0</span></a>
+    <a href="../index.html" class="nav-back" data-lang="es">← Volver al inicio</a>
+    <a href="../index.html" class="nav-back" data-lang="en" style="display:none">← Back to home</a>
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('es')">ES</button>
+      <button class="lang-btn" onclick="setLang('en')">EN</button>
+    </div>
+  </nav>
+
+  <div class="hero-sub">
+    <div class="hero-sub-img"><img src="../images/img4.jpg" alt="Uso incorrecto de la IA" /></div>
+    <div class="hero-sub-grid"></div>
+    <div class="breadcrumb">
+      <a href="../index.html">Colombia 5.0</a> / <span data-lang="es">Reflexión Crítica</span><span data-lang="en" style="display:none">Critical Reflection</span>
+    </div>
+    <div class="hero-tag" data-lang="es">⚠️ Reflexión · Colombia 5.0</div>
+    <div class="hero-tag" data-lang="en" style="display:none">⚠️ Reflection · Colombia 5.0</div>
+    <h1>
+      <span data-lang="es">Uso<br/><em>incorrecto</em><br/>de la IA</span>
+      <span data-lang="en" style="display:none">Incorrect<br/><em>use</em><br/>of AI</span>
+    </h1>
+    <p class="subtitle" data-lang="es">Una de las conversaciones más honestas de Colombia 5.0: cuando el entusiasmo por la IA choca con la realidad de cómo la usamos.</p>
+    <p class="subtitle" data-lang="en" style="display:none">One of the most honest conversations at Colombia 5.0: when enthusiasm for AI collides with the reality of how we use it.</p>
+  </div>
+
+  <div class="content">
+    <div class="content-grid">
+      <div>
+        <p class="section-tag" data-lang="es">// El Diagnóstico</p>
+        <p class="section-tag" data-lang="en" style="display:none">// The Diagnosis</p>
+        <h2 class="section-title" data-lang="es">Tenemos la herramienta.<br/>¿Sabemos usarla?</h2>
+        <h2 class="section-title" data-lang="en" style="display:none">We have the tool.<br/>Do we know how to use it?</h2>
+
+        <p class="body-text" data-lang="es">
+          Este fue quizás el momento más honesto, más incómodo y más necesario de Colombia 5.0. En un evento dedicado a celebrar la tecnología y el potencial digital de Colombia, uno de sus ponentes más destacados decidió pararse frente a la pantalla y decir algo que pocos se atreven a decir en estos espacios: <strong>estamos usando la inteligencia artificial mal</strong>. No todos, no siempre, pero sí con una frecuencia y una superficialidad que debería preocuparnos profundamente.
+        </p>
+        <p class="body-text" data-lang="en" style="display:none">
+          This was perhaps the most honest, most uncomfortable and most necessary moment of Colombia 5.0. In an event dedicated to celebrating technology and Colombia's digital potential, one of its most prominent speakers decided to stand in front of the screen and say something few dare to say in these spaces: <strong>we are using artificial intelligence wrong</strong>. Not everyone, not always, but with a frequency and superficiality that should deeply concern us.
+        </p>
+
+        <div class="stat-row">
+          <div class="stat-box">
+            <div class="stat-num" data-lang="es">73%</div>
+            <div class="stat-label" data-lang="es">de usuarios de IA en LATAM no verifica la información que obtiene</div>
+            <div class="stat-num" data-lang="en" style="display:none">73%</div>
+            <div class="stat-label" data-lang="en" style="display:none">of AI users in LATAM don't verify the information they obtain</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num" data-lang="es">1 de 3</div>
+            <div class="stat-label" data-lang="es">profesionales delega decisiones críticas a herramientas de IA sin supervisión</div>
+            <div class="stat-num" data-lang="en" style="display:none">1 in 3</div>
+            <div class="stat-label" data-lang="en" style="display:none">professionals delegate critical decisions to AI tools without oversight</div>
+          </div>
+        </div>
+
+        <img src="../images/img4.jpg" alt="Uso incorrecto de la IA - Colombia 5.0" class="img-full" />
+
+        <p class="body-text" data-lang="es">
+          La sesión sobre el uso incorrecto de la IA no fue un regaño. Fue una clase magistral de <strong>alfabetización digital crítica</strong>. El ponente —con el humor y la claridad que caracterizó todas sus intervenciones en Colombia 5.0— desplegó ejemplos concretos, algunos divertidos, otros francamente alarmantes, de las formas en que ciudadanos, empresas e incluso instituciones están tropezando con la IA por falta de comprensión.
+        </p>
+        <p class="body-text" data-lang="en" style="display:none">
+          The session on incorrect use of AI was not a scolding. It was a masterclass in <strong>critical digital literacy</strong>. The speaker — with the humor and clarity that characterized all his interventions at Colombia 5.0 — deployed concrete examples, some funny, others frankly alarming, of the ways citizens, businesses and even institutions are stumbling with AI due to lack of understanding.
+        </p>
+
+        <div class="pullquote">
+          <p data-lang="es">"Tener un Ferrari no te convierte en piloto de Fórmula 1. Tener ChatGPT no te convierte en experto en IA. Pero la diferencia es que con el Ferrari, el único que puede morir eres tú."</p>
+          <p data-lang="en" style="display:none">"Having a Ferrari doesn't make you a Formula 1 driver. Having ChatGPT doesn't make you an AI expert. But the difference is that with the Ferrari, the only one who can die is you."</p>
+          <cite>Jair Ramírez · Colombia 5.0, 2026</cite>
+        </div>
+
+        <p class="section-tag" style="margin-top:2.5rem" data-lang="es">// Los Errores Más Comunes</p>
+        <p class="section-tag" style="margin-top:2.5rem" data-lang="en" style="display:none">// The Most Common Mistakes</p>
+        <h3 style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.4rem;margin-bottom:1.5rem;" data-lang="es">Cómo (no) usar la IA</h3>
+        <h3 style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.4rem;margin-bottom:1.5rem;" data-lang="en" style="display:none">How (not) to use AI</h3>
+
+        <div class="misuse-cards">
+          <div class="misuse-card">
+            <div class="misuse-icon">⛔</div>
+            <div>
+              <div class="misuse-title" data-lang="es">Copiar sin verificar</div>
+              <div class="misuse-title" data-lang="en" style="display:none">Copy without verifying</div>
+              <div class="misuse-body" data-lang="es">Tomar el output de una IA como verdad absoluta sin contrastar con fuentes primarias. La IA puede alucinar, inventar referencias, citar mal. El usuario que no verifica convierte sus errores en propios.</div>
+              <div class="misuse-body" data-lang="en" style="display:none">Taking an AI's output as absolute truth without checking against primary sources. AI can hallucinate, invent references, cite incorrectly. The user who doesn't verify turns its errors into their own.</div>
+            </div>
+          </div>
+          <div class="misuse-card">
+            <div class="misuse-icon">⛔</div>
+            <div>
+              <div class="misuse-title" data-lang="es">Delegar el juicio ético</div>
+              <div class="misuse-title" data-lang="en" style="display:none">Delegating ethical judgment</div>
+              <div class="misuse-body" data-lang="es">Pedir a una IA que tome decisiones que tienen implicaciones morales, legales o emocionales. "¿Debo despedir a este empleado?" no es una pregunta para un algoritmo.</div>
+              <div class="misuse-body" data-lang="en" style="display:none">Asking an AI to make decisions that have moral, legal or emotional implications. "Should I fire this employee?" is not a question for an algorithm.</div>
+            </div>
+          </div>
+          <div class="misuse-card">
+            <div class="misuse-icon">⛔</div>
+            <div>
+              <div class="misuse-title" data-lang="es">Ignorar los sesgos</div>
+              <div class="misuse-title" data-lang="en" style="display:none">Ignoring biases</div>
+              <div class="misuse-body" data-lang="es">Toda IA está entrenada con datos que tienen sesgos históricos, culturales y de representación. Usar IA sin conciencia de esto perpetúa y amplifica discriminación.</div>
+              <div class="misuse-body" data-lang="en" style="display:none">Every AI is trained on data with historical, cultural and representation biases. Using AI without awareness of this perpetuates and amplifies discrimination.</div>
+            </div>
+          </div>
+          <div class="misuse-card">
+            <div class="misuse-icon">⛔</div>
+            <div>
+              <div class="misuse-title" data-lang="es">Automatizar lo que requiere humanidad</div>
+              <div class="misuse-title" data-lang="en" style="display:none">Automating what requires humanity</div>
+              <div class="misuse-body" data-lang="es">Hay tareas que pierden valor cuando se automatizan: el cuidado, la escucha, la creatividad genuina, la empatía. La IA puede simular estas cosas, pero no puede reemplazarlas.</div>
+              <div class="misuse-body" data-lang="en" style="display:none">There are tasks that lose value when automated: care, listening, genuine creativity, empathy. AI can simulate these things, but cannot replace them.</div>
+            </div>
+          </div>
+        </div>
+
+        <p class="section-tag" style="margin-top:2.5rem" data-lang="es">// El Otro Lado</p>
+        <p class="section-tag" style="margin-top:2.5rem" data-lang="en" style="display:none">// The Other Side</p>
+        <h3 style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.4rem;margin-bottom:1.5rem;" data-lang="es">Cuando la IA sí transforma</h3>
+        <h3 style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.4rem;margin-bottom:1.5rem;" data-lang="en" style="display:none">When AI truly transforms</h3>
+
+        <div class="good-use-cards">
+          <div class="good-card">
+            <div class="misuse-icon">✅</div>
+            <div>
+              <div class="good-title" data-lang="es">Como amplificador del pensamiento humano</div>
+              <div class="good-title" data-lang="en" style="display:none">As an amplifier of human thought</div>
+              <div class="good-body" data-lang="es">Usar la IA para explorar más perspectivas, generar ideas que luego el humano refina, cuestiona y decide. La IA como segundo cerebro, no como cerebro reemplazante.</div>
+              <div class="good-body" data-lang="en" style="display:none">Using AI to explore more perspectives, generate ideas that the human then refines, questions and decides. AI as a second brain, not a replacement brain.</div>
+            </div>
+          </div>
+          <div class="good-card">
+            <div class="misuse-icon">✅</div>
+            <div>
+              <div class="good-title" data-lang="es">Para democratizar capacidades</div>
+              <div class="good-title" data-lang="en" style="display:none">To democratize capabilities</div>
+              <div class="good-body" data-lang="es">La IA puede dar a un emprendedor colombiano de regiones acceso a herramientas que antes solo tenían las grandes empresas: análisis de datos, traducción, diseño, código. Eso sí es transformador.</div>
+              <div class="good-body" data-lang="en" style="display:none">AI can give a Colombian entrepreneur from the regions access to tools previously only available to large companies: data analysis, translation, design, code. That is truly transformative.</div>
+            </div>
+          </div>
+          <div class="good-card">
+            <div class="misuse-icon">✅</div>
+            <div>
+              <div class="good-title" data-lang="es">Para acelerar el aprendizaje</div>
+              <div class="good-title" data-lang="en" style="display:none">To accelerate learning</div>
+              <div class="good-body" data-lang="es">No como sustituto del estudio sino como tutor personalizado, explicador de conceptos complejos, generador de ejercicios. La IA puede ser el mejor maestro del mundo si se usa bien.</div>
+              <div class="good-body" data-lang="en" style="display:none">Not as a substitute for study but as a personalized tutor, explainer of complex concepts, exercise generator. AI can be the best teacher in the world if used correctly.</div>
+            </div>
+          </div>
+        </div>
+
+        <p class="body-text" style="margin-top:2rem" data-lang="es">
+          La sesión sobre uso incorrecto de la IA no terminó en pesimismo. Al contrario: terminó con una invitación poderosa. Si podemos nombrar los errores, podemos evitarlos. Si podemos enseñar el uso responsable, podemos construir un ecosistema digital más sano. Colombia 5.0 no es solo un evento; es una oportunidad de cambiar la cultura digital del país desde la raíz.
+        </p>
+        <p class="body-text" style="margin-top:2rem" data-lang="en" style="display:none">
+          The session on incorrect use of AI did not end in pessimism. On the contrary: it ended with a powerful invitation. If we can name the mistakes, we can avoid them. If we can teach responsible use, we can build a healthier digital ecosystem. Colombia 5.0 is not just an event; it is an opportunity to change the country's digital culture from the roots.
+        </p>
+
+        <div class="nav-pages">
+          <a href="jair-ramirez.html" class="page-link">
+            <div class="page-link-label" data-lang="es">← Anterior</div>
+            <div class="page-link-label" data-lang="en" style="display:none">← Previous</div>
+            <div class="page-link-title" data-lang="es">Jair Ramírez · Spider-Man con IA</div>
+            <div class="page-link-title" data-lang="en" style="display:none">Jair Ramírez · Spider-Man with AI</div>
+          </a>
+          <a href="colombia50-iniciativa.html" class="page-link">
+            <div class="page-link-label" data-lang="es">→ Siguiente</div>
+            <div class="page-link-label" data-lang="en" style="display:none">→ Next</div>
+            <div class="page-link-title" data-lang="es">La Iniciativa Colombia 5.0</div>
+            <div class="page-link-title" data-lang="en" style="display:none">The Colombia 5.0 Initiative</div>
+          </a>
+          <a href="../index.html" class="page-link">
+            <div class="page-link-label" data-lang="es">🏠 Inicio</div>
+            <div class="page-link-label" data-lang="en" style="display:none">🏠 Home</div>
+            <div class="page-link-title" data-lang="es">La Experiencia Completa</div>
+            <div class="page-link-title" data-lang="en" style="display:none">The Full Experience</div>
+          </a>
+        </div>
+      </div>
+
+      <div>
+        <div class="sidebar-card">
+          <h3 data-lang="es">Datos de la Sesión</h3>
+          <h3 data-lang="en" style="display:none">Session Info</h3>
+          <div class="sidebar-item">
+            <div class="sidebar-icon">⚠️</div>
+            <div>
+              <div class="sidebar-label" data-lang="es">Tema</div>
+              <div class="sidebar-label" data-lang="en" style="display:none">Topic</div>
+              <div class="sidebar-value" data-lang="es">Uso Incorrecto de la IA</div>
+              <div class="sidebar-value" data-lang="en" style="display:none">Incorrect Use of AI</div>
+            </div>
+          </div>
+          <div class="sidebar-item">
+            <div class="sidebar-icon">🎤</div>
+            <div>
+              <div class="sidebar-label" data-lang="es">Ponente</div>
+              <div class="sidebar-label" data-lang="en" style="display:none">Speaker</div>
+              <div class="sidebar-value">Jair Ramírez</div>
+            </div>
+          </div>
+          <div class="sidebar-item">
+            <div class="sidebar-icon">📍</div>
+            <div>
+              <div class="sidebar-label" data-lang="es">Lugar</div>
+              <div class="sidebar-label" data-lang="en" style="display:none">Location</div>
+              <div class="sidebar-value" data-lang="es">Auditorio Col 5.0 · Bogotá</div>
+              <div class="sidebar-value" data-lang="en" style="display:none">Col 5.0 Auditorium · Bogotá</div>
+            </div>
+          </div>
+          <div class="sidebar-item">
+            <div class="sidebar-icon">🔑</div>
+            <div>
+              <div class="sidebar-label" data-lang="es">Concepto clave</div>
+              <div class="sidebar-label" data-lang="en" style="display:none">Key concept</div>
+              <div class="sidebar-value" data-lang="es">Alfabetización Digital Crítica</div>
+              <div class="sidebar-value" data-lang="en" style="display:none">Critical Digital Literacy</div>
+            </div>
+          </div>
+          <div class="sidebar-item">
+            <div class="sidebar-icon">🎯</div>
+            <div>
+              <div class="sidebar-label" data-lang="es">Mensaje central</div>
+              <div class="sidebar-label" data-lang="en" style="display:none">Central message</div>
+              <div class="sidebar-value" data-lang="es">Acceso ≠ Comprensión</div>
+              <div class="sidebar-value" data-lang="en" style="display:none">Access ≠ Understanding</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-brand">Col<span>5.0</span></div>
+    <div class="footer-copy">© 2026 Colombia 5.0 · Ministerio TIC · Tr-ce</div>
+  </footer>
+
+  <script>
+    function setLang(lang) {
+      document.querySelectorAll('[data-lang]').forEach(el => {
+        el.style.display = el.dataset.lang === lang ? '' : 'none';
+      });
+      document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`).classList.add('active');
+      localStorage.setItem('col50lang', lang);
+    }
+    const saved = localStorage.getItem('col50lang') || 'es';
+    setLang(saved);
+  </script>
+</body>
+</html>
